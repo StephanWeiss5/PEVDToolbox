@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PolyVecNormalisation</title>
+  <meta name="keywords" content="PolyVecNormalisation">
+  <meta name="description" content="u = PolyVecNormalisation(v,rho);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PolyVecNormalisation
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>u = PolyVecNormalisation(v,rho);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function u = PolyVecNormalisation(v,rho,N,epsilon); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">u = PolyVecNormalisation(v,rho); 
+
+  This function normalises a polynomial vector v to unit length, such that
+  u^P(z).u(z) = 1. This is equivalent to normalising a constant vector to
+  a Euclidean length of unity in the non-polynomial case.
+
+  The result vector is trimmed to remove a fraction rho of the energy before
+  returning u, in order to limit the order of this vector.
+
+  Implemented in the DFT domain, the chosen DFT size exceeds 2^N times the 
+  order of v, with a default of N=4. This order increase is for internal 
+  precision, and the result is trimmed subsequently.
+  
+  Input parameter:
+       v           Mx1xL matrix containing a polynomial vector of length L
+       rho         fraction of energy to be trimmed for return variable
+       N           internal order increase is 2^N (default: N=4)
+       epsilon     small constant to avoid division by zero (default 2.2e-16)
+
+  Output parameter:
+       u           Mx1xJ matrix of normalised polynomial vector</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>	H = ParaHerm(G)</li><li><a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>	H = PolyMatConv(F,G);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function u = PolyVecNormalisation(v,rho,N,epsilon);</a>
+0002 <span class="comment">%u = PolyVecNormalisation(v,rho);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  This function normalises a polynomial vector v to unit length, such that</span>
+0005 <span class="comment">%  u^P(z).u(z) = 1. This is equivalent to normalising a constant vector to</span>
+0006 <span class="comment">%  a Euclidean length of unity in the non-polynomial case.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%  The result vector is trimmed to remove a fraction rho of the energy before</span>
+0009 <span class="comment">%  returning u, in order to limit the order of this vector.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%  Implemented in the DFT domain, the chosen DFT size exceeds 2^N times the</span>
+0012 <span class="comment">%  order of v, with a default of N=4. This order increase is for internal</span>
+0013 <span class="comment">%  precision, and the result is trimmed subsequently.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%  Input parameter:</span>
+0016 <span class="comment">%       v           Mx1xL matrix containing a polynomial vector of length L</span>
+0017 <span class="comment">%       rho         fraction of energy to be trimmed for return variable</span>
+0018 <span class="comment">%       N           internal order increase is 2^N (default: N=4)</span>
+0019 <span class="comment">%       epsilon     small constant to avoid division by zero (default 2.2e-16)</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%  Output parameter:</span>
+0022 <span class="comment">%       u           Mx1xJ matrix of normalised polynomial vector</span>
+0023 <span class="comment">%</span>
+0024         
+0025 <span class="comment">%  S. Weiss, UoS, 27/7/2022</span>
+0026 
+0027 <span class="keyword">if</span> nargin&lt;3,
+0028    N = 4;
+0029    epsilon = eps;
+0030 <span class="keyword">elseif</span> nargin&lt;4,
+0031    epsilon=eps;
+0032 <span class="keyword">else</span>
+0033    <span class="comment">% do nothing</span>
+0034 <span class="keyword">end</span>;   
+0035 <span class="comment">%epsilon = 1e-16;</span>
+0036 <span class="comment">%epsilon</span>
+0037 
+0038 <span class="comment">%------------------------------------------------------------------------------</span>
+0039 <span class="comment">% determine normalisation function;</span>
+0040 <span class="comment">%------------------------------------------------------------------------------</span>
+0041 rvv = squeeze(<a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(<a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(v),v));
+0042 Lrvv = length(rvv);
+0043 Nfft = 2^(ceil(log2(Lrvv))+4);
+0044 Rvv = sqrt(abs(fft(rvv,Nfft))); 
+0045 <span class="comment">%------------------------------------------------------------------------------</span>
+0046 <span class="comment">% perform normalisation in the DFT domain</span>
+0047 <span class="comment">%------------------------------------------------------------------------------</span>
+0048 U = fft(v,Nfft,3);
+0049 <span class="keyword">for</span> k = 1:Nfft,
+0050    <span class="keyword">if</span> Rvv(k) &lt;= epsilon
+0051       U(:,:,k) = 0;
+0052    <span class="keyword">else</span>   
+0053       U(:,:,k) = U(:,:,k)/Rvv(k);
+0054    <span class="keyword">end</span>;   
+0055 <span class="keyword">end</span>;
+0056 u = ifft(U,Nfft,3);
+0057 
+0058 <span class="comment">%------------------------------------------------------------------------------</span>
+0059 <span class="comment">% allow for non-causal solution</span>
+0060 <span class="comment">%------------------------------------------------------------------------------</span>
+0061 dummy = u;
+0062 u(:,:,1:Nfft/2) = dummy(:,:,Nfft/2+1:Nfft);
+0063 u(:,:,Nfft/2+1:Nfft) = dummy(:,:,1:Nfft/2);
+0064    
+0065 <span class="comment">%------------------------------------------------------------------------------</span>
+0066 <span class="comment">% trimming</span>
+0067 <span class="comment">%------------------------------------------------------------------------------</span>
+0068 E = zeros(Nfft,1);
+0069 <span class="keyword">for</span> k = 1:Nfft,
+0070    E(k) = norm(u(:,:,k)).^2;
+0071 <span class="keyword">end</span>;         
+0072 Etotal = sum(E);    
+0073 <span class="comment">% now take iteratively from the front or the end of u until a fraction rho of</span>
+0074 <span class="comment">% the energy has been removed</span>
+0075 E = E/Etotal;
+0076 Trim=1; StartIndex=1; EndIndex=Nfft; ClippedEnergyFraction=0;
+0077 <span class="keyword">while</span> (Trim==1),
+0078   <span class="keyword">if</span> E(StartIndex)&lt;E(EndIndex),
+0079      <span class="keyword">if</span> (ClippedEnergyFraction+E(StartIndex))&lt;=rho,
+0080         ClippedEnergyFraction = ClippedEnergyFraction+E(StartIndex);
+0081         StartIndex=StartIndex+1;
+0082      <span class="keyword">else</span>
+0083         Trim=0;
+0084      <span class="keyword">end</span>;
+0085   <span class="keyword">else</span>
+0086      <span class="keyword">if</span> (ClippedEnergyFraction+E(EndIndex))&lt;=rho,
+0087         ClippedEnergyFraction = ClippedEnergyFraction+E(EndIndex);
+0088         EndIndex=EndIndex-1;
+0089      <span class="keyword">else</span>
+0090         Trim=0;
+0091      <span class="keyword">end</span>;
+0092   <span class="keyword">end</span>;
+0093 <span class="keyword">end</span>;
+0094 u = u(:,:,StartIndex:EndIndex);                
+0095 
+0096</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

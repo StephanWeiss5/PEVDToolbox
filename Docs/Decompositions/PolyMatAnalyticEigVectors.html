@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PolyMatAnalyticEigVectors</title>
+  <meta name="keywords" content="PolyMatAnalyticEigVectors">
+  <meta name="description" content="[Q,chi] = PolyMatAnalyticEigVectors(R,Lambda,Nmax,Th1,Th2)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html Decompositions -->
+<h1>PolyMatAnalyticEigVectors
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>[Q,chi] = PolyMatAnalyticEigVectors(R,Lambda,Nmax,Th1,Th2)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [Q,chi] = PolyMatAnalyticEigVectors(R,Lambda,Nmax,Thresh1,Thresh2); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">[Q,chi] = PolyMatAnalyticEigVectors(R,Lambda,Nmax,Th1,Th2)
+
+   Extract approximate analytic eigenvectors from a parahermitian matrix R 
+   using the approach described in [4], returning analytic eigenvalues in 
+   Lambda. These are used to order the eigenvectors in each bin, extract 1D 
+   eigenspaces across algebraic multiplicitities, and obtain an analytic 
+   eigenvector in each such 1d subspace through finding the phase in each bin
+   that creates the smoothes possible function, or shortest time-domain 
+   support.
+
+   Input parameters
+       R        MxMxN space-time covariance matrix (time-domain)
+       Lambda   MxL analytic eigenvalues (time domain, one per row)
+       Nmax     maximum FFT length for iteration (default 256)
+       Th1      threshold for orthonormality (default 5e-5)
+       Th2      threshold for trimming (default 1e-4)
+
+   Output parameters
+       Q        MxMx? matrix of eigenvectors (time domain)
+       chi      error in paraunitarity
+
+  References
+  [1] S Weiss, J Pestana and IK Proulder: &quot;On the existence and uniqueness of
+      the eigenvalue decomposition of a parahermitian matrix,&quot; IEEE Trans. on
+      Signal Processing, 66(10):2659-2672, May 2018.
+  [2] S Weiss, J Pestana, IK Proulder, and FK Coutts: &quot;Corrections to `On the 
+      existence and uniqueness of the eigenvalue decomposition of a para-
+      hermitian matrix',&quot; IEEE Trans. on Signal Processing, 66(23):6325-6327, 
+      Dec. 2018.
+  [3] S Weiss, IK Proulder, and FK Coutts: &quot;Parahermitian matrix eigenvalue 
+      decomposition: extraction of analytic eigenvalues,&quot; IEEE Trans. on 
+      Signal Processing, 69:722-737, Jan. 2021.
+  [4] S Weiss, IK Proulder, FK Coutts, and F Khattak: &quot;Parahermitian matrix eigenvalue 
+      decomposition: extraction of analytic eigenvectors,&quot; IEEE Trans. on 
+      Signal Processing, submitted, Feb. 2022.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Demos/PolyMatAnalyticEVDTest.html" class="code" title="">PolyMatAnalyticEVDTest</a>	PolyMatAnalyticEVDTest.m</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Q,chi] = PolyMatAnalyticEigVectors(R,Lambda,Nmax,Thresh1,Thresh2);</a>
+0002 <span class="comment">%[Q,chi] = PolyMatAnalyticEigVectors(R,Lambda,Nmax,Th1,Th2)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   Extract approximate analytic eigenvectors from a parahermitian matrix R</span>
+0005 <span class="comment">%   using the approach described in [4], returning analytic eigenvalues in</span>
+0006 <span class="comment">%   Lambda. These are used to order the eigenvectors in each bin, extract 1D</span>
+0007 <span class="comment">%   eigenspaces across algebraic multiplicitities, and obtain an analytic</span>
+0008 <span class="comment">%   eigenvector in each such 1d subspace through finding the phase in each bin</span>
+0009 <span class="comment">%   that creates the smoothes possible function, or shortest time-domain</span>
+0010 <span class="comment">%   support.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   Input parameters</span>
+0013 <span class="comment">%       R        MxMxN space-time covariance matrix (time-domain)</span>
+0014 <span class="comment">%       Lambda   MxL analytic eigenvalues (time domain, one per row)</span>
+0015 <span class="comment">%       Nmax     maximum FFT length for iteration (default 256)</span>
+0016 <span class="comment">%       Th1      threshold for orthonormality (default 5e-5)</span>
+0017 <span class="comment">%       Th2      threshold for trimming (default 1e-4)</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   Output parameters</span>
+0020 <span class="comment">%       Q        MxMx? matrix of eigenvectors (time domain)</span>
+0021 <span class="comment">%       chi      error in paraunitarity</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%  References</span>
+0024 <span class="comment">%  [1] S Weiss, J Pestana and IK Proulder: &quot;On the existence and uniqueness of</span>
+0025 <span class="comment">%      the eigenvalue decomposition of a parahermitian matrix,&quot; IEEE Trans. on</span>
+0026 <span class="comment">%      Signal Processing, 66(10):2659-2672, May 2018.</span>
+0027 <span class="comment">%  [2] S Weiss, J Pestana, IK Proulder, and FK Coutts: &quot;Corrections to `On the</span>
+0028 <span class="comment">%      existence and uniqueness of the eigenvalue decomposition of a para-</span>
+0029 <span class="comment">%      hermitian matrix',&quot; IEEE Trans. on Signal Processing, 66(23):6325-6327,</span>
+0030 <span class="comment">%      Dec. 2018.</span>
+0031 <span class="comment">%  [3] S Weiss, IK Proulder, and FK Coutts: &quot;Parahermitian matrix eigenvalue</span>
+0032 <span class="comment">%      decomposition: extraction of analytic eigenvalues,&quot; IEEE Trans. on</span>
+0033 <span class="comment">%      Signal Processing, 69:722-737, Jan. 2021.</span>
+0034 <span class="comment">%  [4] S Weiss, IK Proulder, FK Coutts, and F Khattak: &quot;Parahermitian matrix eigenvalue</span>
+0035 <span class="comment">%      decomposition: extraction of analytic eigenvectors,&quot; IEEE Trans. on</span>
+0036 <span class="comment">%      Signal Processing, submitted, Feb. 2022.</span></pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

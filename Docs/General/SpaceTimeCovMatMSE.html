@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of SpaceTimeCovMatMSE</title>
+  <meta name="keywords" content="SpaceTimeCovMatMSE">
+  <meta name="description" content="SpaceTimeCovMatMSE(R,N,T,mode);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>SpaceTimeCovMatMSE
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>SpaceTimeCovMatMSE(R,N,T,mode);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [xi_1,xi_2,VarE] = SpaceTimeCovMatMSE(R,N,T,VecMode); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SpaceTimeCovMatMSE(R,N,T,mode);
+
+  SpaceTimeCovMatMSE(R,N,T) determines the mean square estimation error of 
+  a space time covariance matrix R over a support length of (-T ... +T) 
+  given a data set containing N snap shots, based on the analysis in [1].
+
+  Via [xi_1,xi_2] = SpaceTimeCovMatMSE(R,N,T), this function returns two
+  arguments: the estimation error due to the finite sample set in xi_1, 
+  and a truncation error in xi_2. If 2T+1 exceeds the support of R, then 
+  xi_2 will be zero.
+
+  [xi_1,xi_2,VarE] = SpaceTimeCovMatMSE(R,N,T) additionally returns the
+  variance of the estimation error for each element of the estimate.
+     
+  [xi_1,xi_2,VarE] = SpaceTimeCovMatMSE(R,N,T,'vec') returns vectors of 
+  dimension T for xi_1 and xi_2, containing errors for lags tau, 0&lt;tau&lt;=T.
+
+  Input parameters:
+    R         MxMxL space-time covariance matrix
+    N         number of snapshots
+    T         maximum lag range over which estimate is calculated
+    mode      optional, 'vec' for vectorial rather than total error terms  
+     
+  Output parameters
+    xi_1      estimation error due to finite sample size N
+    xi_2      truncation error, xi_2&gt;0 in case T&lt;L
+    VarE      MxMx(2T+1) variance of estimated space time covariance
+                matrix, element by element
+
+  Reference:
+    [1] C. Delaosa, J. Pestana, N. Goddard, S. Somasundaram, S. Weiss:
+        &quot;Sample Space-Time Covariance Matrix Estimation&quot;, submitted to 
+        IEEE ICASSP, Brighton, UK, May 2019.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [xi_1,xi_2,VarE] = SpaceTimeCovMatMSE(R,N,T,VecMode);</a>
+0002 <span class="comment">%SpaceTimeCovMatMSE(R,N,T,mode);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  SpaceTimeCovMatMSE(R,N,T) determines the mean square estimation error of</span>
+0005 <span class="comment">%  a space time covariance matrix R over a support length of (-T ... +T)</span>
+0006 <span class="comment">%  given a data set containing N snap shots, based on the analysis in [1].</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%  Via [xi_1,xi_2] = SpaceTimeCovMatMSE(R,N,T), this function returns two</span>
+0009 <span class="comment">%  arguments: the estimation error due to the finite sample set in xi_1,</span>
+0010 <span class="comment">%  and a truncation error in xi_2. If 2T+1 exceeds the support of R, then</span>
+0011 <span class="comment">%  xi_2 will be zero.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%  [xi_1,xi_2,VarE] = SpaceTimeCovMatMSE(R,N,T) additionally returns the</span>
+0014 <span class="comment">%  variance of the estimation error for each element of the estimate.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%  [xi_1,xi_2,VarE] = SpaceTimeCovMatMSE(R,N,T,'vec') returns vectors of</span>
+0017 <span class="comment">%  dimension T for xi_1 and xi_2, containing errors for lags tau, 0&lt;tau&lt;=T.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%  Input parameters:</span>
+0020 <span class="comment">%    R         MxMxL space-time covariance matrix</span>
+0021 <span class="comment">%    N         number of snapshots</span>
+0022 <span class="comment">%    T         maximum lag range over which estimate is calculated</span>
+0023 <span class="comment">%    mode      optional, 'vec' for vectorial rather than total error terms</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%  Output parameters</span>
+0026 <span class="comment">%    xi_1      estimation error due to finite sample size N</span>
+0027 <span class="comment">%    xi_2      truncation error, xi_2&gt;0 in case T&lt;L</span>
+0028 <span class="comment">%    VarE      MxMx(2T+1) variance of estimated space time covariance</span>
+0029 <span class="comment">%                matrix, element by element</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%  Reference:</span>
+0032 <span class="comment">%    [1] C. Delaosa, J. Pestana, N. Goddard, S. Somasundaram, S. Weiss:</span>
+0033 <span class="comment">%        &quot;Sample Space-Time Covariance Matrix Estimation&quot;, submitted to</span>
+0034 <span class="comment">%        IEEE ICASSP, Brighton, UK, May 2019.</span>
+0035   
+0036 <span class="comment">% S. Weiss, UoS, 28/10/18</span>
+0037 <span class="comment">%    return a vector of errors       06/05/2022</span>
+0038 
+0039 <span class="comment">%------------------------------------------------------------------------------</span>
+0040 <span class="comment">%  parameters</span>
+0041 <span class="comment">%------------------------------------------------------------------------------</span>
+0042 [M,~,L] = size(R);
+0043 Tmax = (L-1)/2;            <span class="comment">% lag range of R is (-Tmax ... +Tmax)</span>
+0044 ComplexMode = isreal(R);   <span class="comment">% 0: complex;  1: real</span>
+0045 VectorMode=0;
+0046 <span class="keyword">if</span> nargin&gt;3,
+0047    <span class="keyword">if</span> VecMode==<span class="string">'vec'</span>,
+0048       VectorMode=1;
+0049    <span class="keyword">end</span>;
+0050 <span class="keyword">end</span>;      
+0051    
+0052 <span class="comment">%------------------------------------------------------------------------------</span>
+0053 <span class="comment">%  check for truncation</span>
+0054 <span class="comment">%------------------------------------------------------------------------------</span>
+0055 <span class="keyword">if</span> VectorMode==0,
+0056   xi_2 = 0.0;
+0057   <span class="keyword">if</span> T&lt;Tmax,                 <span class="comment">% only evaluate positive lag range</span>
+0058     <span class="comment">%   disp('truncation error incurred');</span>
+0059     <span class="keyword">for</span> t = T+1:Tmax,   
+0060       xi_2 = xi_2 + 2*norm(R(:,:,Tmax+1+t),<span class="string">'fro'</span>)^2;
+0061     <span class="keyword">end</span>;
+0062   <span class="keyword">end</span>;
+0063 <span class="keyword">else</span>
+0064   dummy = zeros(Tmax,1);
+0065   <span class="keyword">for</span> t=1:Tmax,
+0066      dummy(t)= 2*norm(R(:,:,Tmax+1+t),<span class="string">'fro'</span>)^2;
+0067   <span class="keyword">end</span>;
+0068   dummy = cumsum(dummy,<span class="string">'reverse'</span>); 
+0069   xi_2 = zeros(T,1);
+0070   <span class="keyword">if</span> T&lt;=Tmax,
+0071      xi_2 = dummy(1:T);
+0072   <span class="keyword">else</span>; 
+0073      xi_2(1:Tmax) = dummy;
+0074   <span class="keyword">end</span>;        
+0075 <span class="keyword">end</span>;
+0076 
+0077 <span class="comment">%------------------------------------------------------------------------------</span>
+0078 <span class="comment">%  determine estimation error</span>
+0079 <span class="comment">%------------------------------------------------------------------------------</span>
+0080 <span class="keyword">if</span> T &gt; Tmax,
+0081    L = T-Tmax;
+0082    dummy = zeros(M,M,2*T+1);
+0083    dummy(:,:,L+1:L+2*Tmax+1)=R;
+0084    R = dummy; Tmax = T; 
+0085 <span class="keyword">end</span>;
+0086 VarE = zeros(M,M,2*T+1);
+0087 <span class="keyword">for</span> m = 1:M,
+0088   r_xx = squeeze(R(m,m,:)).'; 
+0089   <span class="keyword">for</span> mu = 1:M,
+0090     r_yy = squeeze(R(mu,mu,:)).';
+0091     r_xx_yy_ext = [zeros(1,T) r_xx.*conj(r_yy) zeros(1,T)];   
+0092     Var_rh_xy2 = zeros(1,2*T+1);   
+0093     rb_xy = squeeze(R(m,mu,:)).';
+0094     <span class="keyword">if</span> ComplexMode==0,
+0095       rb_xy = zeros(size(rb_xy));
+0096     <span class="keyword">end</span>;
+0097     rb_xy_ext = [zeros(1,T) rb_xy zeros(1,T)];      
+0098     <span class="keyword">for</span> tau = -T:T,
+0099       W = [1:(T+1), T:-1:1] + (N-abs(tau)-T-1);    <span class="comment">% weighting function</span>
+0100       W1 = r_xx_yy_ext((-T:T)+Tmax+T+1);
+0101       W2 = rb_xy_ext((-T:T)+Tmax+T+1+tau);
+0102       Var_rh_xy2(tau+T+1) = (W1 + W2.*fliplr(conj(W2)) )*W'/(N-abs(tau)).^2;
+0103     <span class="keyword">end</span>;
+0104     VarE(m,mu,:) =  Var_rh_xy2;
+0105   <span class="keyword">end</span>;
+0106 <span class="keyword">end</span>;
+0107 <span class="keyword">if</span> VectorMode==0,
+0108   xi_1 = sum(sum(sum(VarE)));
+0109 <span class="keyword">else</span>
+0110   xi_1 = zeros(T,1);
+0111   xi_1(1) = sum(sum(VarE(:,:,T+1))); 
+0112   xi_1(2:T) = 2*cumsum(squeeze(sum(sum(VarE(:,:,T+2:2*T+1)))));  
+0113 <span class="keyword">end</span>;</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

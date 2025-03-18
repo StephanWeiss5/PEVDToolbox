@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PolyMatAnalyticEVDTest</title>
+  <meta name="keywords" content="PolyMatAnalyticEVDTest">
+  <meta name="description" content="PolyMatAnalyticEVDTest.m">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html Demos -->
+<h1>PolyMatAnalyticEVDTest
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>PolyMatAnalyticEVDTest.m</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PolyMatAnalyticEVDTest.m
+
+ Demonstrate the use of the functions PolyMatAnalyticEigValues() and 
+ PolyMatAnalyticEigVectors().
+
+ S. Weiss 11/5/2022</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Decompositions/PolyMatAnalyticEigValues.html" class="code" title="function [L_analytic,L_permutation,EVPrecision,xi2] = PolyMatAnalyticEigValues(R,Nmax,PrecLimit);">PolyMatAnalyticEigValues</a>	PolyMatAnalyticEigValues(R);</li><li><a href="../Decompositions/PolyMatAnalyticEigVectors.html" class="code" title="function [Q,chi] = PolyMatAnalyticEigVectors(R,Lambda,Nmax,Thresh1,Thresh2);">PolyMatAnalyticEigVectors</a>	[Q,chi] = PolyMatAnalyticEigVectors(R,Lambda,Nmax,Th1,Th2)</li><li><a href="../General/ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>	H = ParaHerm(G)</li><li><a href="../General/PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>	H = PolyMatConv(F,G);</li><li><a href="../General/PolyMatDisplay.html" class="code" title="function PolyMatDisplay(H,t,mode);">PolyMatDisplay</a>	PolyMatDisplay(H,t,mode);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% PolyMatAnalyticEVDTest.m</span>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% Demonstrate the use of the functions PolyMatAnalyticEigValues() and</span>
+0004 <span class="comment">% PolyMatAnalyticEigVectors().</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% S. Weiss 11/5/2022</span>
+0007 
+0008 clear all; close all;
+0009 
+0010 <span class="comment">%--------------------------------------------------------------</span>
+0011 <span class="comment">%   parameters</span>
+0012 <span class="comment">%--------------------------------------------------------------</span>
+0013 M = 3;       <span class="comment">% spatial dimension</span>
+0014 Ll = 3;      <span class="comment">% length of eigenvalues (must be odd)</span>
+0015 Lq = 3;      <span class="comment">% length of eigenvectors</span>
+0016 
+0017 <span class="comment">%--------------------------------------------------------------</span>
+0018 <span class="comment">%   construct a parahermitian matrix</span>
+0019 <span class="comment">%--------------------------------------------------------------</span>
+0020 Lambda=zeros(M,M,Ll); 
+0021 <span class="keyword">for</span> i = 1:M,
+0022   dummy = randn((Ll+1)/2,1);
+0023   Lambda(i,i,:) = conv(dummy,conj(flipud(dummy)));
+0024 <span class="keyword">end</span>;   
+0025 Q = zeros(3,3,1);
+0026 Q(:,:,1) = eye(3);
+0027 <span class="keyword">for</span> i = 1:Lq-1,
+0028    dummy = randn(M,1);
+0029    dummy = dummy/norm(dummy);
+0030    U = zeros(M,M,2);
+0031    U(:,:,1) = eye(3)-dummy*dummy';
+0032    U(:,:,2) = dummy*dummy';
+0033    Q = <a href="../General/PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Q,U);
+0034 <span class="keyword">end</span>;   
+0035 R = <a href="../General/PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Q,<a href="../General/PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Lambda,<a href="../General/ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(Q)));
+0036 
+0037 <span class="comment">%--------------------------------------------------------------</span>
+0038 <span class="comment">%   Analytic EVD</span>
+0039 <span class="comment">%--------------------------------------------------------------</span>
+0040 L_hat = <a href="../Decompositions/PolyMatAnalyticEigValues.html" class="code" title="function [L_analytic,L_permutation,EVPrecision,xi2] = PolyMatAnalyticEigValues(R,Nmax,PrecLimit);">PolyMatAnalyticEigValues</a>(R);
+0041 Q_hat = <a href="../Decompositions/PolyMatAnalyticEigVectors.html" class="code" title="function [Q,chi] = PolyMatAnalyticEigVectors(R,Lambda,Nmax,Thresh1,Thresh2);">PolyMatAnalyticEigVectors</a>(R,L_hat);
+0042 Lambda_hat = zeros(M,M,size(L_hat,2));
+0043 <span class="keyword">for</span> m = 1:M,
+0044    Lambda_hat(m,m,:) = L_hat(m,:);
+0045 <span class="keyword">end</span>;
+0046    
+0047 <span class="comment">%--------------------------------------------------------------</span>
+0048 <span class="comment">%   Diagnostics</span>
+0049 <span class="comment">%--------------------------------------------------------------</span>
+0050 figure(1); <a href="../General/PolyMatDisplay.html" class="code" title="function PolyMatDisplay(H,t,mode);">PolyMatDisplay</a>(real(Lambda));
+0051 figure(2); <a href="../General/PolyMatDisplay.html" class="code" title="function PolyMatDisplay(H,t,mode);">PolyMatDisplay</a>(real(Q));
+0052 disp(<span class="string">'ground truth in Figs. 1 and 2'</span>);
+0053 figure(3); <a href="../General/PolyMatDisplay.html" class="code" title="function PolyMatDisplay(H,t,mode);">PolyMatDisplay</a>(real(Lambda_hat));
+0054 figure(4); <a href="../General/PolyMatDisplay.html" class="code" title="function PolyMatDisplay(H,t,mode);">PolyMatDisplay</a>(real(Q_hat));
+0055 disp(<span class="string">'extractions in Figs. 3 and 4'</span>);
+0056</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PolyMatConv</title>
+  <meta name="keywords" content="PolyMatConv">
+  <meta name="description" content="H = PolyMatConv(F,G);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PolyMatConv
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>H = PolyMatConv(F,G);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function H = PolyMatConv(F,G); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">H = PolyMatConv(F,G);
+
+   Returns the convolution of two MIMO system matrices F and G. This 
+   convolution operator is not commutative, and if representing 
+   polynomial matrices, F is left-multiplied onto G.
+
+   For all matrices F, G and H, the first two dimensions are spatial, 
+   and the third dimension is lag or time. If e.g. F is a polynomial 
+   matrix of the format
+      F(z) = F0 + F1 z^{-1} + F2 z^{-2} + ...
+   then
+      F(:,:,1) = F0;
+      F(:,:,2) = F1;
+      F(:,:,3) = F2;
+      ...
+   is the required representation for the input. The output is
+      H(z) = F(z)G(z)
+   with a format representation analogously to F(z) above.
+
+   Input parameters
+      F      K x M x L1 MIMO system matrix 
+             K   output dimension
+             M   input dimension
+             L1  length of FIR filters
+      G      M x N x L2 MIMO system matrix 
+             M   output dimension
+             N   input dimension
+             L2  length of FIR filters
+
+   Output parameters
+      H      K x N x (L1+L2-1) MIMO system matrix</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Demos/ConvergenceDemo.html" class="code" title="function ConvergenceDemo(SourceSwitch);">ConvergenceDemo</a>	ConvergenceDemo(SourceSwitch);</li><li><a href="../Demos/PHPolyMatInvDemo.html" class="code" title="function PHPolyMatInvDemo(sw);">PHPolyMatInvDemo</a>	PHPolyMatInvDemo(SourceSwitch);</li><li><a href="../Demos/PolyMatAnalyticEVDTest.html" class="code" title="">PolyMatAnalyticEVDTest</a>	PolyMatAnalyticEVDTest.m</li><li><a href="../Demos/SBR2Demo.html" class="code" title="function SBR2Demo(SourceSwitch);">SBR2Demo</a>	SBR2Demo(SourceSwitch);</li><li><a href="../Demos/SMDDemo.html" class="code" title="function SMDDemo(SourceSwitch);">SMDDemo</a>	SMDDemo(SourceSwitch);</li><li><a href="../Demos/SpectralMajorisationDemo.html" class="code" title="function SpectralMajorisationDemo();">SpectralMajorisationDemo</a>	SpectralMajorisationDemo()</li><li><a href="GenerateMIMOSources.html" class="code" title="function [H,D,F] = GenerateMIMOSources(L,P,M,K,gamma,Mode)">GenerateMIMOSources</a>	[H,D,F] = GenerateMIMOSources(L,P,M,K,gamma,Mode)</li><li><a href="PEVDToyProblem.html" class="code" title="function [R,Lambda,Q] = PEVDToyProblem(ToyIndex,DisplayOn);">PEVDToyProblem</a>	[R,Lambda,Q] = PEVDToyProblem(Num,Disp);</li><li><a href="PHPolyMatInv.html" class="code" title="function S = PHPolyMatInv(R,T,MaxIter,theta,epsilon);">PHPolyMatInv</a>	S = PHPolyMatInv(R,T,MaxIter,theta,epsilon);</li><li><a href="PUPolyMatRand.html" class="code" title="function H = PUPolyMatRand(M,L,N,mode);">PUPolyMatRand</a>	H = PUPolyMatRand(M,L,N,mode);</li><li><a href="PUPolyMatTrim.html" class="code" title="function [H2,rho] = PUPolyMatTrim(H1,gamma)">PUPolyMatTrim</a>	[H2,rho] = PUPolyMatTrim(H1,gamma)</li><li><a href="PUPolyMatTrimRowCorr.html" class="code" title="function [H2,rho] = PUPolyMatTrimRowCorr(H1,Mu)">PUPolyMatTrimRowCorr</a>	[H2,rho] = PUPolyMatTrimRowCorr(H1,Mu)</li><li><a href="PolyVecNormalisation.html" class="code" title="function u = PolyVecNormalisation(v,rho,N,epsilon);">PolyVecNormalisation</a>	u = PolyVecNormalisation(v,rho);</li><li><a href="PssMusic.html" class="code" title="function [Pss,Ps,AA] = PssMusic(Q,L,K,angles,epsilon);">PssMusic</a>	function [Pss,Ps] = PssMusic(Q,L,K,angles);</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function H = PolyMatConv(F,G);</a>
+0002 <span class="comment">%H = PolyMatConv(F,G);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   Returns the convolution of two MIMO system matrices F and G. This</span>
+0005 <span class="comment">%   convolution operator is not commutative, and if representing</span>
+0006 <span class="comment">%   polynomial matrices, F is left-multiplied onto G.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   For all matrices F, G and H, the first two dimensions are spatial,</span>
+0009 <span class="comment">%   and the third dimension is lag or time. If e.g. F is a polynomial</span>
+0010 <span class="comment">%   matrix of the format</span>
+0011 <span class="comment">%      F(z) = F0 + F1 z^{-1} + F2 z^{-2} + ...</span>
+0012 <span class="comment">%   then</span>
+0013 <span class="comment">%      F(:,:,1) = F0;</span>
+0014 <span class="comment">%      F(:,:,2) = F1;</span>
+0015 <span class="comment">%      F(:,:,3) = F2;</span>
+0016 <span class="comment">%      ...</span>
+0017 <span class="comment">%   is the required representation for the input. The output is</span>
+0018 <span class="comment">%      H(z) = F(z)G(z)</span>
+0019 <span class="comment">%   with a format representation analogously to F(z) above.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%   Input parameters</span>
+0022 <span class="comment">%      F      K x M x L1 MIMO system matrix</span>
+0023 <span class="comment">%             K   output dimension</span>
+0024 <span class="comment">%             M   input dimension</span>
+0025 <span class="comment">%             L1  length of FIR filters</span>
+0026 <span class="comment">%      G      M x N x L2 MIMO system matrix</span>
+0027 <span class="comment">%             M   output dimension</span>
+0028 <span class="comment">%             N   input dimension</span>
+0029 <span class="comment">%             L2  length of FIR filters</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   Output parameters</span>
+0032 <span class="comment">%      H      K x N x (L1+L2-1) MIMO system matrix</span>
+0033    
+0034 <span class="comment">% S Weiss, Univ of Southampton, 15/7/2004</span>
+0035   
+0036 [M1,N1,L1] = size(F);
+0037 [M2,N2,L2] = size(G);
+0038 <span class="keyword">if</span> N1 ~= M2,
+0039   error(<span class="string">'input matrix dimensions to function PolyMatConv() do not agree'</span>);
+0040 <span class="keyword">end</span>;
+0041 <span class="comment">% Pre-allocate MIMO system matrix</span>
+0042 H = zeros(M1,N2,L1+L2-1);
+0043 
+0044 <span class="keyword">for</span> m = 1:M1,
+0045   <span class="keyword">for</span> n = 1:N2,
+0046     <span class="keyword">for</span> k = 1:N1,
+0047       a = shiftdim(F(m,k,:),1);
+0048       b = shiftdim(G(k,n,:),1);
+0049       c(1,:,1) = conv(a,b);
+0050       H(m,n,:) = H(m,n,:) + shiftdim(c,-1);
+0051     <span class="keyword">end</span>;   
+0052   <span class="keyword">end</span>;  
+0053 <span class="keyword">end</span>;
+0054</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ParaHerm</title>
+  <meta name="keywords" content="ParaHerm">
+  <meta name="description" content="H = ParaHerm(G)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>ParaHerm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>H = ParaHerm(G)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function H = ParaHerm(G); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">H = ParaHerm(G)
+
+   Returns the parahermitian (i.e. the complex conjugate transpose, time
+   reversed matrix) of the MIMO system matrix G.
+  
+   If G represents a polynomial matrix G(z) of order L with
+      G(z) = G0 + G1 z^{-1} + G2 z^{-2} + ... + GL z^{-L}
+   then
+      G(:,:,1) = G0;
+      G(:,:,2) = G1;
+      G(:,:,3) = G2;
+      ...
+      G(:,:,L) = GL;
+   The parahermitian H(z) = G~(z) is given by
+      H(:,:,1)   = GL';
+      ...
+      H(:,:,L-1) = G1';
+      H(:,:,L)   = G0';
+   Note that (.)' is the Hermitian transpose operator.
+
+   Input parameter:
+      H      K x N x L    MIMO system matrix
+
+   Output parameter:
+      G      N x K x L    MIMO system matrix</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Demos/ConvergenceDemo.html" class="code" title="function ConvergenceDemo(SourceSwitch);">ConvergenceDemo</a>	ConvergenceDemo(SourceSwitch);</li><li><a href="../Demos/PHPolyMatInvDemo.html" class="code" title="function PHPolyMatInvDemo(sw);">PHPolyMatInvDemo</a>	PHPolyMatInvDemo(SourceSwitch);</li><li><a href="../Demos/PolyMatAnalyticEVDTest.html" class="code" title="">PolyMatAnalyticEVDTest</a>	PolyMatAnalyticEVDTest.m</li><li><a href="../Demos/SBR2Demo.html" class="code" title="function SBR2Demo(SourceSwitch);">SBR2Demo</a>	SBR2Demo(SourceSwitch);</li><li><a href="../Demos/SMDDemo.html" class="code" title="function SMDDemo(SourceSwitch);">SMDDemo</a>	SMDDemo(SourceSwitch);</li><li><a href="../Demos/SpectralMajorisationDemo.html" class="code" title="function SpectralMajorisationDemo();">SpectralMajorisationDemo</a>	SpectralMajorisationDemo()</li><li><a href="GenerateMIMOSources.html" class="code" title="function [H,D,F] = GenerateMIMOSources(L,P,M,K,gamma,Mode)">GenerateMIMOSources</a>	[H,D,F] = GenerateMIMOSources(L,P,M,K,gamma,Mode)</li><li><a href="PEVDToyProblem.html" class="code" title="function [R,Lambda,Q] = PEVDToyProblem(ToyIndex,DisplayOn);">PEVDToyProblem</a>	[R,Lambda,Q] = PEVDToyProblem(Num,Disp);</li><li><a href="PHPolyMatInv.html" class="code" title="function S = PHPolyMatInv(R,T,MaxIter,theta,epsilon);">PHPolyMatInv</a>	S = PHPolyMatInv(R,T,MaxIter,theta,epsilon);</li><li><a href="PUPolyMatTrim.html" class="code" title="function [H2,rho] = PUPolyMatTrim(H1,gamma)">PUPolyMatTrim</a>	[H2,rho] = PUPolyMatTrim(H1,gamma)</li><li><a href="PUPolyMatTrimRowCorr.html" class="code" title="function [H2,rho] = PUPolyMatTrimRowCorr(H1,Mu)">PUPolyMatTrimRowCorr</a>	[H2,rho] = PUPolyMatTrimRowCorr(H1,Mu)</li><li><a href="PolyVecNormalisation.html" class="code" title="function u = PolyVecNormalisation(v,rho,N,epsilon);">PolyVecNormalisation</a>	u = PolyVecNormalisation(v,rho);</li><li><a href="PssMusic.html" class="code" title="function [Pss,Ps,AA] = PssMusic(Q,L,K,angles,epsilon);">PssMusic</a>	function [Pss,Ps] = PssMusic(Q,L,K,angles);</li><li><a href="SpaceTimeCovMat.html" class="code" title="function [R,tau] = SpaceTimeCovMat(X,MaxLag);">SpaceTimeCovMat</a>	[R,tau] = SpaceTimeCovMat(X,MaxLag);</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function H = ParaHerm(G);</a>
+0002 <span class="comment">%H = ParaHerm(G)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   Returns the parahermitian (i.e. the complex conjugate transpose, time</span>
+0005 <span class="comment">%   reversed matrix) of the MIMO system matrix G.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   If G represents a polynomial matrix G(z) of order L with</span>
+0008 <span class="comment">%      G(z) = G0 + G1 z^{-1} + G2 z^{-2} + ... + GL z^{-L}</span>
+0009 <span class="comment">%   then</span>
+0010 <span class="comment">%      G(:,:,1) = G0;</span>
+0011 <span class="comment">%      G(:,:,2) = G1;</span>
+0012 <span class="comment">%      G(:,:,3) = G2;</span>
+0013 <span class="comment">%      ...</span>
+0014 <span class="comment">%      G(:,:,L) = GL;</span>
+0015 <span class="comment">%   The parahermitian H(z) = G~(z) is given by</span>
+0016 <span class="comment">%      H(:,:,1)   = GL';</span>
+0017 <span class="comment">%      ...</span>
+0018 <span class="comment">%      H(:,:,L-1) = G1';</span>
+0019 <span class="comment">%      H(:,:,L)   = G0';</span>
+0020 <span class="comment">%   Note that (.)' is the Hermitian transpose operator.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%   Input parameter:</span>
+0023 <span class="comment">%      H      K x N x L    MIMO system matrix</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%   Output parameter:</span>
+0026 <span class="comment">%      G      N x K x L    MIMO system matrix</span>
+0027  
+0028 <span class="comment">% S Weiss, Univ of Southampton, 15/7/2004</span>
+0029   
+0030 [M,N,L] = size(G);
+0031 H = zeros(N,M,L);
+0032 <span class="keyword">for</span> m = 1:M,
+0033   <span class="keyword">for</span> n = 1:N,
+0034      H(n,m,:) = conj(G(m,n,end:-1:1));
+0035   <span class="keyword">end</span>;  
+0036 <span class="keyword">end</span>;
+0037</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

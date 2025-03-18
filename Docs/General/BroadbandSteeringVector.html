@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of BroadbandSteeringVector</title>
+  <meta name="keywords" content="BroadbandSteeringVector">
+  <meta name="description" content="S = BroadbandSteeringVector(M,alpha,T);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>BroadbandSteeringVector
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>S = BroadbandSteeringVector(M,alpha,T);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function S = BroadbandSteeringVector(M,alpha,T); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">S = BroadbandSteeringVector(M,alpha,T);
+  
+   S=BroadbandSteeringVector(M,alpha) simulates a broadband steering vector 
+   for a linear equispaced array with critical sampling in both space and time.
+   The number of array elements is M, and the implementation of the broadband
+   steering vector is based on a windowed sinc function [1,2] of order 50.
+    
+   S=BroadbandSteeringVector(M,alpha,T) changes the default value for the order 
+   of the fractional delay filter to 2T. 
+
+   Input parameters:
+      M      number of array elements
+      alpha  angle of incident measured against broadside /[rad]
+      T      half order of fractional delay filter (optional)
+             default  value: T=25;
+
+   Output parameter:
+      S      broadband steering vector (M x 1 x (2T+1) )
+   
+   References:
+   [1]  T.I. Laakso, V. Valimaki, M. Karjalainen, and U.K. Laine: &quot;Splitting 
+        the unit delay,&quot; IEEE Signal Processing Magazine, 13(1):30-60, Jan.
+        1996.
+   [2]  J.Selva, &quot;An efficient structure for the design of variable fractional 
+        delay filters based on the windowing method,&quot; IEEE Transactions on 
+        Signal Processing, 56(8):3770--3775, Aug. 2008.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="PssMusic.html" class="code" title="function [Pss,Ps,AA] = PssMusic(Q,L,K,angles,epsilon);">PssMusic</a>	function [Pss,Ps] = PssMusic(Q,L,K,angles);</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function S = BroadbandSteeringVector(M,alpha,T);</a>
+0002 <span class="comment">%S = BroadbandSteeringVector(M,alpha,T);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   S=BroadbandSteeringVector(M,alpha) simulates a broadband steering vector</span>
+0005 <span class="comment">%   for a linear equispaced array with critical sampling in both space and time.</span>
+0006 <span class="comment">%   The number of array elements is M, and the implementation of the broadband</span>
+0007 <span class="comment">%   steering vector is based on a windowed sinc function [1,2] of order 50.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   S=BroadbandSteeringVector(M,alpha,T) changes the default value for the order</span>
+0010 <span class="comment">%   of the fractional delay filter to 2T.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   Input parameters:</span>
+0013 <span class="comment">%      M      number of array elements</span>
+0014 <span class="comment">%      alpha  angle of incident measured against broadside /[rad]</span>
+0015 <span class="comment">%      T      half order of fractional delay filter (optional)</span>
+0016 <span class="comment">%             default  value: T=25;</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%   Output parameter:</span>
+0019 <span class="comment">%      S      broadband steering vector (M x 1 x (2T+1) )</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%   References:</span>
+0022 <span class="comment">%   [1]  T.I. Laakso, V. Valimaki, M. Karjalainen, and U.K. Laine: &quot;Splitting</span>
+0023 <span class="comment">%        the unit delay,&quot; IEEE Signal Processing Magazine, 13(1):30-60, Jan.</span>
+0024 <span class="comment">%        1996.</span>
+0025 <span class="comment">%   [2]  J.Selva, &quot;An efficient structure for the design of variable fractional</span>
+0026 <span class="comment">%        delay filters based on the windowing method,&quot; IEEE Transactions on</span>
+0027 <span class="comment">%        Signal Processing, 56(8):3770--3775, Aug. 2008.</span>
+0028 
+0029 <span class="comment">%   M. Alrmah, S. Weiss, University of Strathclyde, 24/11/2014</span>
+0030 <span class="comment">%   updated for delays to be centred w.r.t. the array, S. Weiss, 16/11/22</span>
+0031 
+0032 <span class="comment">% input option</span>
+0033 <span class="keyword">if</span> nargin==2,
+0034    T = 25;
+0035 <span class="keyword">end</span>;
+0036 
+0037 <span class="comment">% fractional delay between adjacent elements</span>
+0038 dT = sin(alpha);
+0039 
+0040 <span class="comment">% centre the delay profile</span>
+0041 <span class="keyword">if</span> dT &gt;=0,
+0042    DelayProfile = ((0:(M-1))-(M-1)/2)*dT;
+0043 <span class="keyword">else</span>;
+0044    DelayProfile = -((0:(M-1))-(M-1)/2)*dT;
+0045 <span class="keyword">end</span>;
+0046 
+0047 <span class="comment">% maximum shift and effective support of indiviual fractional delay filters</span>
+0048 MaxShift = floor(DelayProfile(M)+0.5);
+0049 Tr = T-MaxShift;
+0050 
+0051 S = zeros(M,1,2*T+1);
+0052 <span class="keyword">for</span> m =1:M,
+0053    t = (-Tr:Tr);
+0054    FracDelay = DelayProfile(m);
+0055    FracFracDelay = mod(FracDelay+0.5,1)-0.5;
+0056    IntFracDelay = floor(FracDelay+0.5);
+0057    w_Hann = 1 + cos(2*pi*(t-FracFracDelay)/2/(Tr+1));   
+0058    <span class="comment">% windowed sinc function</span>
+0059    dummy = sinc(t-FracFracDelay).*w_Hann/sqrt(M);
+0060    <span class="comment">% insertion into broadband steering vector</span>
+0061    Shift = MaxShift+IntFracDelay;
+0062    <span class="keyword">if</span> dT &gt;= 0,
+0063      S(m,1,Shift+(1:2*Tr+1)) = dummy;
+0064    <span class="keyword">else</span>; 
+0065      S(M-m+1,1,Shift+(1:2*Tr+1)) = dummy;
+0066    <span class="keyword">end</span>; 
+0067 <span class="keyword">end</span>; 
+0068</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PEVDToyProblem</title>
+  <meta name="keywords" content="PEVDToyProblem">
+  <meta name="description" content="[R,Lambda,Q] = PEVDToyProblem(Num,Disp);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PEVDToyProblem
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>[R,Lambda,Q] = PEVDToyProblem(Num,Disp);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [R,Lambda,Q] = PEVDToyProblem(ToyIndex,DisplayOn); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">[R,Lambda,Q] = PEVDToyProblem(Num,Disp);
+
+  [R,Lambda,Q] = PEVDToyProblem(Num,Disp) implements a number of defined toy
+  problems for a parahermitian matrix EVD. The parameter Num determines the
+  scenario; for Disp='on', the power spectra of the eigenvalues will be
+  displayed.
+
+  PEVDToyProblem(1) returns a 2x2 parahermitian matrix with spectrally 
+  majorised eigenvalues; all factors are polynomial matrices.
+
+  PEVDToyProblem(2) is a 2x2 example from [Icart &amp; Common, 2013] and [Weiss, 
+  Pestana, &amp; Proudler, TSP draft] with spectrally majorised eigenvalues. All 
+  factors are transcendental matrices. The returned approximate eigenvectors 
+  are NOT normalised, but can serve as a comparison w.r.t. subspace angles
+  of an alternative solution.
+
+  PEVDToyProblem(3) is another 2x2 exampled from [Icart &amp; Common, 2013] and 
+  [Weiss, Pestana, &amp; Proudler, TSP draft] with spectrally unmajorised 
+  eigenvalues. All factors are polynomial matrices.
+
+  PEVDToyProblem(4) is an `easy' 3x3 parahermitian matrix with spectrally 
+  unmajorised eigenvalues. There are only pair-wise overlaps that are well-
+  separated. All factors are polynomial matrices.
+
+  PEVDToyProblem(5) is a `difficult' 3x3 parahermitian matrix, with 
+  polynomial matrix factors but algebraic multiplicities up to 3, and some
+  closely-spaced intersections.
+
+  Input parameter:
+     Num        toy problem number/index
+     Disp       displays characteristics (optional for Disp='on')
+
+  Output parameter:
+     R          parahermitian matrix
+     Lambda     matrix of eigenvalues
+     Q          parahermitian matrix
+
+  S. Weiss, UoS, 1/12/2017</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>	H = ParaHerm(G)</li><li><a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>	H = PolyMatConv(F,G);</li><li><a href="PolyMatDiagSpec.html" class="code" title="function P = PolyMatDiagSpec(H,Ndft);">PolyMatDiagSpec</a>	P = PolyMatDiagSpec(R,Ndft);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [R,Lambda,Q] = PEVDToyProblem(ToyIndex,DisplayOn);</a>
+0002 <span class="comment">%[R,Lambda,Q] = PEVDToyProblem(Num,Disp);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  [R,Lambda,Q] = PEVDToyProblem(Num,Disp) implements a number of defined toy</span>
+0005 <span class="comment">%  problems for a parahermitian matrix EVD. The parameter Num determines the</span>
+0006 <span class="comment">%  scenario; for Disp='on', the power spectra of the eigenvalues will be</span>
+0007 <span class="comment">%  displayed.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%  PEVDToyProblem(1) returns a 2x2 parahermitian matrix with spectrally</span>
+0010 <span class="comment">%  majorised eigenvalues; all factors are polynomial matrices.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%  PEVDToyProblem(2) is a 2x2 example from [Icart &amp; Common, 2013] and [Weiss,</span>
+0013 <span class="comment">%  Pestana, &amp; Proudler, TSP draft] with spectrally majorised eigenvalues. All</span>
+0014 <span class="comment">%  factors are transcendental matrices. The returned approximate eigenvectors</span>
+0015 <span class="comment">%  are NOT normalised, but can serve as a comparison w.r.t. subspace angles</span>
+0016 <span class="comment">%  of an alternative solution.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%  PEVDToyProblem(3) is another 2x2 exampled from [Icart &amp; Common, 2013] and</span>
+0019 <span class="comment">%  [Weiss, Pestana, &amp; Proudler, TSP draft] with spectrally unmajorised</span>
+0020 <span class="comment">%  eigenvalues. All factors are polynomial matrices.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%  PEVDToyProblem(4) is an `easy' 3x3 parahermitian matrix with spectrally</span>
+0023 <span class="comment">%  unmajorised eigenvalues. There are only pair-wise overlaps that are well-</span>
+0024 <span class="comment">%  separated. All factors are polynomial matrices.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%  PEVDToyProblem(5) is a `difficult' 3x3 parahermitian matrix, with</span>
+0027 <span class="comment">%  polynomial matrix factors but algebraic multiplicities up to 3, and some</span>
+0028 <span class="comment">%  closely-spaced intersections.</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%  Input parameter:</span>
+0031 <span class="comment">%     Num        toy problem number/index</span>
+0032 <span class="comment">%     Disp       displays characteristics (optional for Disp='on')</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%  Output parameter:</span>
+0035 <span class="comment">%     R          parahermitian matrix</span>
+0036 <span class="comment">%     Lambda     matrix of eigenvalues</span>
+0037 <span class="comment">%     Q          parahermitian matrix</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%  S. Weiss, UoS, 1/12/2017</span>
+0040 
+0041 <span class="keyword">switch</span> ToyIndex
+0042   <span class="keyword">case</span> 1,
+0043     <span class="comment">%---------------------------------------------------------------------</span>
+0044     <span class="comment">%   2x2 spectrally majorised matrix with polynomial factors</span>
+0045     <span class="comment">%---------------------------------------------------------------------</span>
+0046     <span class="comment">% one eigenvalue constant, the other highpass</span>
+0047     Lambda = zeros(2,2,3);
+0048     Lambda(:,:,1) = [0 0; 0 -.2];
+0049     Lambda(:,:,2) = [1 0; 0 0.5];
+0050     Lambda(:,:,3) = Lambda(:,:,1)';
+0051     <span class="comment">% eigenvectors via an elementary paraunitary operation</span>
+0052     v = [1 -1]'/sqrt(2);
+0053     Q = zeros(2,2,2);
+0054     Q(:,:,1) = eye(2) - v*v';
+0055     Q(:,:,2) = v*v';
+0056     <span class="comment">% construction of the `space-time covariance' matrix</span>
+0057     R = <a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Q,<a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Lambda,<a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(Q)));
+0058   <span class="keyword">case</span> 2,
+0059     <span class="comment">%---------------------------------------------------------------------</span>
+0060     <span class="comment">%   2x2 spectrally majorised matrix with transcendental factors</span>
+0061     <span class="comment">%---------------------------------------------------------------------</span>
+0062     <span class="comment">% problem by Sylvie Icart, also in our TSP16 draft</span>
+0063     R = zeros(2,2,3);
+0064     R(:,:,1) = [0 0; 0 -2];
+0065     R(:,:,2) = [1 1; 1 6];
+0066     R(:,:,3) = R(:,:,1)';
+0067     <span class="comment">% determinant etc.</span>
+0068     R11 = [0 1 0]';  R12 = [0 1 0]'; R22 = [-2 6 -2]';
+0069     T = R11+R22;
+0070     S2 = conv(R11-R22,R11-R22) + 4*conv(R12,flipud(conj(R12)));
+0071     <span class="comment">% transcendental eigenvalues ... truncated</span>
+0072     N = 20;
+0073     a = ones(N+1,1);
+0074     <span class="keyword">for</span> n = 0:N,                 <span class="comment">% MacLaurin series</span>
+0075        <span class="keyword">for</span> i = 0:n,
+0076           a(n+1) = a(n+1)*(0.5-i);
+0077        <span class="keyword">end</span>;
+0078        a(n+1) = a(n+1)/factorial(n+1);
+0079     <span class="keyword">end</span>;
+0080     a = [1; a];
+0081     xi = -0.355302 + j*0.198559;
+0082     h1 = a.*(xi.^(0:N+1)');
+0083     h2 = a.*(conj(xi).^(0:N+1)');
+0084     h = conv(h1,h2);
+0085     S = 2./abs(xi)*conv(h,flipud(conj(h)));
+0086     L1 = S/2;
+0087     L1(2*(N+1):2*(N+1)+2) = L1(2*(N+1):2*(N+1)+2) + T/2;
+0088     L2 = -S/2;
+0089     L2(2*(N+1):2*(N+1)+2) = L2(2*(N+1):2*(N+1)+2) + T/2;
+0090     Lambda(1,1,:) = L1;
+0091     Lambda(2,2,:) = L2;
+0092     <span class="comment">% transcendental eigenvectors ... truncated / approximated</span>
+0093     LL = (length(L1)-1)/2;
+0094     Q = zeros(2,2,2*LL+1);
+0095     <span class="comment">% first EV</span>
+0096     Q(1,1,:) = L1;
+0097     dummy = zeros(1,1,3); 
+0098     dummy(1,1,:) = R22;
+0099     Q(1,1,LL:LL+2) = Q(1,1,LL:LL+2) - dummy;
+0100     Q(2,1,LL:LL+2) = R12;
+0101     <span class="comment">% 2nd EV</span>
+0102     Q(1,2,LL:LL+2) = R12;
+0103     Q(2,2,:) = L2;
+0104     dummy(1,1,:) = R11;
+0105     Q(2,2,LL:LL+2) = Q(2,2,LL:LL+2) - dummy;
+0106     <span class="comment">% these would now need normalisation -- divide by the square root :-(</span>
+0107   <span class="keyword">case</span> 3,
+0108     <span class="comment">%---------------------------------------------------------------------</span>
+0109     <span class="comment">%   2x2 spectrally unmajorised matrix with polynomial factors</span>
+0110     <span class="comment">%---------------------------------------------------------------------</span>
+0111     Q = zeros(2,2,2);
+0112     Q(:,:,1) = [1 1; 0 0]/sqrt(2);
+0113     Q(:,:,2) = [0 0; 1 -1]/sqrt(2);
+0114     Lambda = zeros(2,2,3);
+0115     Lambda(:,:,1) = [1 0; 0 -j];
+0116     Lambda(:,:,2) = [3 0; 0 3];
+0117     Lambda(:,:,3) = Lambda(:,:,1)';
+0118     R = <a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Q,<a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Lambda,<a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(Q)));
+0119   <span class="keyword">case</span> 4,
+0120     <span class="comment">%---------------------------------------------------------------------</span>
+0121     <span class="comment">%   'easy' 3x3 spectrally unmajorised matrix with polynomial factors</span>
+0122     <span class="comment">%---------------------------------------------------------------------</span>
+0123     Lambda = zeros(3,3,3);
+0124     Lambda(1,1,:) = [j 4 -j]/4;
+0125     Lambda(2,2,:) = [1/3 3 1/3]/4;  
+0126     Lambda(3,3,:) = [j 2 -j]/4;
+0127     Q = zeros(3,3,2);
+0128     v = [1 1 1]'/sqrt(3);
+0129     Q(:,:,1) = eye(3) - v*v';
+0130     Q(:,:,2) = v*v';
+0131     R = <a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Q,<a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Lambda,<a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(Q)));
+0132   <span class="keyword">case</span> 5,
+0133     <span class="comment">%---------------------------------------------------------------------</span>
+0134     <span class="comment">%   'hard' 3x3 spectrally unmajorised matrix with polynomial factors</span>
+0135     <span class="comment">%---------------------------------------------------------------------</span>
+0136     Lambda = zeros(3,3,5);
+0137     Lambda(1,1,:) = [1 0 2 0 1]/4;
+0138     Lambda(2,2,:) = [0 -1 2 -1 0]/4;  
+0139     Lambda(3,3,:) = [0 -j 4 j 0]/4;
+0140     <span class="comment">% eigenvectors via an elementary paraunitary operation</span>
+0141     V = [1 0 -1; 1 1 0; 1 0 1; -1 1 0]'/sqrt(2);
+0142     Q = zeros(3,3,1);
+0143     Q(:,:,1) = eye(3);
+0144     Qi = zeros(3,3,2);
+0145     <span class="keyword">for</span> i = 1:size(V,2),
+0146       Qi(:,:,1) = eye(3) - V(:,i)*V(:,i)';
+0147       Qi(:,:,2) = V(:,i)*V(:,i)';
+0148       Q = <a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Q,Qi);
+0149     <span class="keyword">end</span>;
+0150     <span class="comment">% space-time covariance matrix</span>
+0151     R = <a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Q,<a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Lambda,<a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(Q)));
+0152   <span class="keyword">otherwise</span>, 
+0153     disp(<span class="string">'toy case not implemented'</span>);
+0154     R = 1; Lambda = 1; Q = 1;
+0155 <span class="keyword">end</span>;
+0156 
+0157 <span class="comment">%-------------------------------------------------------------------------</span>
+0158 <span class="comment">%  check for display option</span>
+0159 <span class="comment">%-------------------------------------------------------------------------</span>
+0160 <span class="keyword">if</span> exist(<span class="string">'DisplayOn'</span>),
+0161    <span class="keyword">if</span> strcmp(DisplayOn,<span class="string">'on'</span>)==1,
+0162       P = <a href="PolyMatDiagSpec.html" class="code" title="function P = PolyMatDiagSpec(H,Ndft);">PolyMatDiagSpec</a>(Lambda,1024);
+0163       plot((0:1023)/1024,abs(P));
+0164       xlabel(<span class="string">'normalised frequency'</span>); ylabel(<span class="string">'magnitude'</span>);
+0165    <span class="keyword">end</span>;
+0166 <span class="keyword">end</span>;
+0167 
+0168</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PHPolyMatTrim</title>
+  <meta name="keywords" content="PHPolyMatTrim">
+  <meta name="description" content="[R2,rho] = PHPolyMatTrim(R1,gamma)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PHPolyMatTrim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>[R2,rho] = PHPolyMatTrim(R1,gamma)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [R2,rho] = PHPolyMatTrim(R1,gamma) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">[R2,rho] = PHPolyMatTrim(R1,gamma)
+ 
+  R2=PHPolyMatTrim(R1) trims the lag dimension of a parahermitian matrix R1 by
+  symmetrically removing the outer matrix coefficients. The function will 
+  remove the matrix coefficient with the smallest Frobenius
+  norm, such that by the total energy of the trimmed parts does not exceed  
+  one permille of the total energy in R1.
+ 
+  R2=PHPolyMatTrim(R1,gamma) trims such that the ratio between the removed 
+  and total energy of R1 is less than gamma, with 0&lt;=gamma&lt;1.
+
+  [R2,rho]=PUPolyMatTrim(R1) or [R2,rho]=PUPolyMatTrim(R1,r) additionally 
+  returns the ratio of the actual suppressed energy in R2.
+  
+  This function is related to PUPolyMatTrim() and the 'trim' operation 
+  described in [1,2].
+
+  Input parameters:
+     R1      parahermitian matrix
+     gamma   maximum ratio between the maximum energy removed at outer lags 
+             and the total energy 
+             default: 1/1000
+  
+  Output parameters:
+     R2      trimmed parahermitian matrix
+     rho     ratio of removed energy
+
+  References:
+  [1] J.G. McWhirter, P.D. Baxter, T. Cooper, S. Redif, and J. Foster, &quot;An EVD 
+      Algorithm for Para-Hermitian Polynomial Matrices,&quot; IEEE Transactions on 
+      Signal Processing, vol. 55, no. 5, pp. 2158-2169, May 2007.
+  [2] C.H. Ta and S. Weiss, &quot;Shortening the Order of Paraunitary Matrices in  
+      SBR2 Algorithm&quot;, 6th International Conference on Information, Communi-
+      cations &amp; Signal Processing, Singapore, pp. 1-5, Dec. 2007.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>	N = PolyMatNorm(H,spec);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [R2,rho] = PHPolyMatTrim(R1,gamma)</a>
+0002 <span class="comment">%[R2,rho] = PHPolyMatTrim(R1,gamma)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  R2=PHPolyMatTrim(R1) trims the lag dimension of a parahermitian matrix R1 by</span>
+0005 <span class="comment">%  symmetrically removing the outer matrix coefficients. The function will</span>
+0006 <span class="comment">%  remove the matrix coefficient with the smallest Frobenius</span>
+0007 <span class="comment">%  norm, such that by the total energy of the trimmed parts does not exceed</span>
+0008 <span class="comment">%  one permille of the total energy in R1.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  R2=PHPolyMatTrim(R1,gamma) trims such that the ratio between the removed</span>
+0011 <span class="comment">%  and total energy of R1 is less than gamma, with 0&lt;=gamma&lt;1.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%  [R2,rho]=PUPolyMatTrim(R1) or [R2,rho]=PUPolyMatTrim(R1,r) additionally</span>
+0014 <span class="comment">%  returns the ratio of the actual suppressed energy in R2.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%  This function is related to PUPolyMatTrim() and the 'trim' operation</span>
+0017 <span class="comment">%  described in [1,2].</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%  Input parameters:</span>
+0020 <span class="comment">%     R1      parahermitian matrix</span>
+0021 <span class="comment">%     gamma   maximum ratio between the maximum energy removed at outer lags</span>
+0022 <span class="comment">%             and the total energy</span>
+0023 <span class="comment">%             default: 1/1000</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%  Output parameters:</span>
+0026 <span class="comment">%     R2      trimmed parahermitian matrix</span>
+0027 <span class="comment">%     rho     ratio of removed energy</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%  References:</span>
+0030 <span class="comment">%  [1] J.G. McWhirter, P.D. Baxter, T. Cooper, S. Redif, and J. Foster, &quot;An EVD</span>
+0031 <span class="comment">%      Algorithm for Para-Hermitian Polynomial Matrices,&quot; IEEE Transactions on</span>
+0032 <span class="comment">%      Signal Processing, vol. 55, no. 5, pp. 2158-2169, May 2007.</span>
+0033 <span class="comment">%  [2] C.H. Ta and S. Weiss, &quot;Shortening the Order of Paraunitary Matrices in</span>
+0034 <span class="comment">%      SBR2 Algorithm&quot;, 6th International Conference on Information, Communi-</span>
+0035 <span class="comment">%      cations &amp; Signal Processing, Singapore, pp. 1-5, Dec. 2007.</span>
+0036 
+0037 <span class="comment">% S. Weiss and J. Corr, University of Strathclyde, 14/11/2014</span>
+0038 
+0039 <span class="comment">% check input parameters</span>
+0040 <span class="keyword">if</span> nargin&lt;2,
+0041    gamma = 0.001;
+0042 <span class="keyword">end</span>;
+0043 
+0044 <span class="comment">% check limit</span>
+0045 Norm1 = <a href="PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>(R1);
+0046 E = gamma*Norm1;
+0047 [M,~,L] = size(R1);
+0048 
+0049 <span class="comment">% trim from sequentially from front or back, where ever the matrix with the</span>
+0050 <span class="comment">% smallest norm can be found, until the desired amount of energy has been</span>
+0051 <span class="comment">% removed</span>
+0052 Etrim = 0;
+0053 IndexRemove = 1;
+0054 Efront = norm(R1(:,:,IndexRemove),<span class="string">'fro'</span>).^2;
+0055 <span class="keyword">while</span> ((Etrim + 2*Efront) &lt;= E),
+0056    Etrim = Etrim + 2*Efront;
+0057    IndexRemove = IndexRemove+1;
+0058    Efront = norm(R1(:,:,IndexRemove),<span class="string">'fro'</span>).^2;
+0059 <span class="keyword">end</span>;    
+0060 
+0061 <span class="comment">% output</span>
+0062 R2 = R1(:,:,IndexRemove:L+1-IndexRemove);
+0063 Etrim = Etrim - 2*Efront;
+0064 rho = Etrim/Norm1;</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

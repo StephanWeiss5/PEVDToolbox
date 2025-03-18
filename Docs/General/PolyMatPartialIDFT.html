@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PolyMatPartialIDFT</title>
+  <meta name="keywords" content="PolyMatPartialIDFT">
+  <meta name="description" content="At = PolyMatPartialIDFT(Af,Nfft,Bins);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PolyMatPartialIDFT
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>At = PolyMatPartialIDFT(Af,Nfft,Bins);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function At = PolyMatPartialIDFT(Af,Nfft,Bins); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> At = PolyMatPartialIDFT(Af,Nfft,Bins);
+
+ PolyMatPartialIDFT() performs an IDFT from only a subset of frequency bins. 
+ For the Fourier representation of a polynomial matrix Af, the index vector 
+ Bins describes which of a total of Nfft bins are present in Af. For the
+ reconstruction to be exact, the orginal FFT has to be at least twice as long
+ as the temporal support of Af.
+
+ Input parameters:
+     Af               MxMxL matrix in the Fourier domain
+     Nfft             FFT size (must be even)
+     Bins             index into the bins that are present in Af
+
+ Output parameter:
+     At               MxMx(Nfft/2)  time domain reconstruction</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function At = PolyMatPartialIDFT(Af,Nfft,Bins);</a>
+0002 <span class="comment">% At = PolyMatPartialIDFT(Af,Nfft,Bins);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% PolyMatPartialIDFT() performs an IDFT from only a subset of frequency bins.</span>
+0005 <span class="comment">% For the Fourier representation of a polynomial matrix Af, the index vector</span>
+0006 <span class="comment">% Bins describes which of a total of Nfft bins are present in Af. For the</span>
+0007 <span class="comment">% reconstruction to be exact, the orginal FFT has to be at least twice as long</span>
+0008 <span class="comment">% as the temporal support of Af.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% Input parameters:</span>
+0011 <span class="comment">%     Af               MxMxL matrix in the Fourier domain</span>
+0012 <span class="comment">%     Nfft             FFT size (must be even)</span>
+0013 <span class="comment">%     Bins             index into the bins that are present in Af</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Output parameter:</span>
+0016 <span class="comment">%     At               MxMx(Nfft/2)  time domain reconstruction</span>
+0017 
+0018 <span class="comment">% S. Weiss, 27/9/23, based on code by Sebastian Schlecht</span>
+0019 
+0020 T = dftmtx(Nfft);
+0021 M = size(Af,1);
+0022 Tinv = pinv(T(Bins,1:Nfft/2));
+0023 At = zeros(M,M,Nfft/2);
+0024 <span class="keyword">for</span> m = 1:M,
+0025    <span class="keyword">for</span> n = 1:M,
+0026       dummy = Tinv*squeeze(Af(m,n,:));
+0027       At(m,n,:) = dummy; 
+0028    <span class="keyword">end</span>;
+0029 <span class="keyword">end</span>;</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

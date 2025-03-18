@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of GenerateMIMOSources</title>
+  <meta name="keywords" content="GenerateMIMOSources">
+  <meta name="description" content="[H,D,F] = GenerateMIMOSources(L,P,M,K,gamma,Mode)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>GenerateMIMOSources
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>[H,D,F] = GenerateMIMOSources(L,P,M,K,gamma,Mode)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [H,D,F] = GenerateMIMOSources(L,P,M,K,gamma,Mode) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">[H,D,F] = GenerateMIMOSources(L,P,M,K,gamma,Mode)
+
+  GenerateMIMOSources(L,P,M,K) produces a source model for M-array data 
+  emanating from L independent Gaussian sources spectrally shaped by Pth 
+  order moving average (MA, i.e. finite impulse response) innovation 
+  filters. The source signals are then mixed by a random MxL paraunitary 
+  matrix of order K.
+
+  GenerateMIMOSources(L,P,M,K,gamma) operates the same but the additional 
+  input parameter gamma limits the radii of zeros in the MA innovation 
+  filters. This restricts the dynamic range of the generated spectra.
+
+  A flow graph of this source model is given in [1]. In the context of 
+  multichannel coding, M=L is required to avoid a division by zero, as the 
+  geometric mean of variances is zero for M&gt;L. The purpose of limiting the 
+  dynamic range of source PSDs is driven by the same aim, and keeps the 
+  problem numerically tractable.
+
+  The source model does currently not permit the overdetermined case where 
+  the number of sources exceeds the number of sensors.
+
+  [H,D,F]=GenerateMIMOSources(L,P,M,K,gamma) returns the paraunitary 
+  mixing matrix H(z) of dimension MxL and order K in H; D represents a 
+  diagonal parahermitian matrix D(z) containing the power spectra of the L 
+  sources prior to convolutive mixing. Minimum phase filters of order P 
+  that generate such PSDs from unit variance complex Gaussian white noise 
+  are contained in the columns of the matrix F.
+
+  [H,D,F]=GenerateMIMOSources(L,P,M,K,gamma,Mode) returns a real-valued
+  source model for Mode='real', and a complex valued one by default.
+
+  Input parameters
+     L       number of independent sources
+     P       order of MA innovation filter
+     M       dimension of array generated (M&gt;=L)
+     K       order of paraunitary mixing matrix
+     gamma   max radius for zeros in the innovation filters
+           (default value is 1)
+     Mode    'real' for readl valued, 'complex valued' (default)
+
+  Output parameters
+     H       paraunitary matrix
+     D       diagonal, parahermitian matrix
+     F       columns are the innovation filters, whose 
+             ACFs generate the diagonal entries of D.
+
+  Reference:
+
+  [1] S. Redif, S. Weiss and J.G. McWhirter, &quot;Sequential Matrix 
+      Diagonalisation Algorithms for Polynomial EVD of Parahermitian 
+      Matrices,&quot; IEEE Transactions on Signal Processing, 63(1):81-89, 
+      January 2015.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>	H = ParaHerm(G)</li><li><a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>	H = PolyMatConv(F,G);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Demos/SpectralMajorisationDemo.html" class="code" title="function SpectralMajorisationDemo();">SpectralMajorisationDemo</a>	SpectralMajorisationDemo()</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [H,D,F] = GenerateMIMOSources(L,P,M,K,gamma,Mode)</a>
+0002 <span class="comment">%[H,D,F] = GenerateMIMOSources(L,P,M,K,gamma,Mode)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  GenerateMIMOSources(L,P,M,K) produces a source model for M-array data</span>
+0005 <span class="comment">%  emanating from L independent Gaussian sources spectrally shaped by Pth</span>
+0006 <span class="comment">%  order moving average (MA, i.e. finite impulse response) innovation</span>
+0007 <span class="comment">%  filters. The source signals are then mixed by a random MxL paraunitary</span>
+0008 <span class="comment">%  matrix of order K.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  GenerateMIMOSources(L,P,M,K,gamma) operates the same but the additional</span>
+0011 <span class="comment">%  input parameter gamma limits the radii of zeros in the MA innovation</span>
+0012 <span class="comment">%  filters. This restricts the dynamic range of the generated spectra.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%  A flow graph of this source model is given in [1]. In the context of</span>
+0015 <span class="comment">%  multichannel coding, M=L is required to avoid a division by zero, as the</span>
+0016 <span class="comment">%  geometric mean of variances is zero for M&gt;L. The purpose of limiting the</span>
+0017 <span class="comment">%  dynamic range of source PSDs is driven by the same aim, and keeps the</span>
+0018 <span class="comment">%  problem numerically tractable.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%  The source model does currently not permit the overdetermined case where</span>
+0021 <span class="comment">%  the number of sources exceeds the number of sensors.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%  [H,D,F]=GenerateMIMOSources(L,P,M,K,gamma) returns the paraunitary</span>
+0024 <span class="comment">%  mixing matrix H(z) of dimension MxL and order K in H; D represents a</span>
+0025 <span class="comment">%  diagonal parahermitian matrix D(z) containing the power spectra of the L</span>
+0026 <span class="comment">%  sources prior to convolutive mixing. Minimum phase filters of order P</span>
+0027 <span class="comment">%  that generate such PSDs from unit variance complex Gaussian white noise</span>
+0028 <span class="comment">%  are contained in the columns of the matrix F.</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%  [H,D,F]=GenerateMIMOSources(L,P,M,K,gamma,Mode) returns a real-valued</span>
+0031 <span class="comment">%  source model for Mode='real', and a complex valued one by default.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%  Input parameters</span>
+0034 <span class="comment">%     L       number of independent sources</span>
+0035 <span class="comment">%     P       order of MA innovation filter</span>
+0036 <span class="comment">%     M       dimension of array generated (M&gt;=L)</span>
+0037 <span class="comment">%     K       order of paraunitary mixing matrix</span>
+0038 <span class="comment">%     gamma   max radius for zeros in the innovation filters</span>
+0039 <span class="comment">%           (default value is 1)</span>
+0040 <span class="comment">%     Mode    'real' for readl valued, 'complex valued' (default)</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%  Output parameters</span>
+0043 <span class="comment">%     H       paraunitary matrix</span>
+0044 <span class="comment">%     D       diagonal, parahermitian matrix</span>
+0045 <span class="comment">%     F       columns are the innovation filters, whose</span>
+0046 <span class="comment">%             ACFs generate the diagonal entries of D.</span>
+0047 <span class="comment">%</span>
+0048 <span class="comment">%  Reference:</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">%  [1] S. Redif, S. Weiss and J.G. McWhirter, &quot;Sequential Matrix</span>
+0051 <span class="comment">%      Diagonalisation Algorithms for Polynomial EVD of Parahermitian</span>
+0052 <span class="comment">%      Matrices,&quot; IEEE Transactions on Signal Processing, 63(1):81-89,</span>
+0053 <span class="comment">%      January 2015.</span>
+0054 
+0055 <span class="comment">% Stephan Weiss, August 2012</span>
+0056 <span class="comment">% real valued option, S. Weiss, Oct 2018</span>
+0057 
+0058 <span class="comment">%--------------------------------------------------------</span>
+0059 <span class="comment">%   Input Parameter Check</span>
+0060 <span class="comment">%--------------------------------------------------------</span>
+0061 <span class="keyword">if</span> nargin==4,
+0062    gamma=1;
+0063 <span class="keyword">end</span>;
+0064 <span class="keyword">if</span> M &lt; L,
+0065   error(<span class="string">'more sources than array elements'</span>);
+0066 <span class="keyword">end</span>;
+0067 RealMode = 0;
+0068 <span class="keyword">if</span> nargin==6,
+0069   <span class="keyword">if</span> Mode==<span class="string">'real'</span>,
+0070      RealMode=1;
+0071   <span class="keyword">end</span>;
+0072 <span class="keyword">end</span>;  
+0073 
+0074 <span class="comment">%--------------------------------------------------------</span>
+0075 <span class="comment">%   Paraunitary Matrix</span>
+0076 <span class="comment">%--------------------------------------------------------</span>
+0077 H = eye(M);  
+0078 <span class="keyword">for</span> k = 1:K,
+0079   <span class="keyword">if</span> RealMode==1, 
+0080      v = randn(M,1);
+0081   <span class="keyword">else</span>
+0082      v = randn(M,1) + sqrt(-1)*randn(M,1);
+0083   <span class="keyword">end</span>;
+0084   v = v./norm(v,2);
+0085   Hnew = zeros(M,M,2);
+0086   <span class="keyword">if</span> RealMode==1,
+0087     [Q,~] = qr(randn(M,M));
+0088   <span class="keyword">else</span>  
+0089     [Q,~] = qr(randn(M,M) + sqrt(-1)*randn(M,M));  
+0090   <span class="keyword">end</span>;  
+0091   Hnew(:,:,1) = v*(v'*Q);
+0092   Hnew(:,:,2) = Q - Hnew(:,:,1);
+0093   H = <a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(H,Hnew);
+0094 <span class="keyword">end</span>;
+0095 
+0096 <span class="comment">%--------------------------------------------------------</span>
+0097 <span class="comment">%   Source Innovation Filters</span>
+0098 <span class="comment">%--------------------------------------------------------</span>
+0099 <span class="keyword">if</span> RealMode==1,
+0100   P2 = floor(P/2);
+0101   P = 2*P2;
+0102   Fz = (rand(P2-1,L)*gamma).*exp(sqrt(-1)*2*pi*rand(P2-1,L));  <span class="comment">% zeros</span>
+0103   Fz = [Fz; conj(Fz)];
+0104 <span class="keyword">else</span>    
+0105   Fz = (rand(P-1,L)*gamma).*exp(sqrt(-1)*2*pi*rand(P-1,L));  <span class="comment">% zeros</span>
+0106 <span class="keyword">end</span>;
+0107 F = zeros(P,L);
+0108 <span class="keyword">for</span> l = 1:L,
+0109    F(:,l) = poly( Fz(:,l)).';
+0110 <span class="keyword">end</span>;
+0111 F(:,1) = F(:,1)./norm(F(:,1),2);
+0112 Ffd = abs(fft(F,1024,1));
+0113 <span class="keyword">for</span> l = 1:L-1,
+0114    alpha = min(Ffd(:,l)./Ffd(:,l+1));
+0115    Ffd(:,l+1) = alpha*Ffd(:,l+1);
+0116    F(:,l+1) = alpha*F(:,l+1);
+0117 <span class="keyword">end</span>;
+0118 
+0119 <span class="comment">%--------------------------------------------------------</span>
+0120 <span class="comment">%   Output Parameters</span>
+0121 <span class="comment">%--------------------------------------------------------</span>
+0122 D1 = zeros(L,L,P);
+0123 <span class="keyword">for</span> l = 1:L,
+0124   <span class="keyword">for</span> p = 1:P,
+0125     D1(l,l,p) = F(p,l);
+0126   <span class="keyword">end</span>;
+0127 <span class="keyword">end</span>;
+0128 D = <a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(D1,<a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(D1));
+0129 H = H(:,1:L,:);
+0130 
+0131 
+0132</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

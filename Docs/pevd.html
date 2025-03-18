@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<style type="text/css">
+<!--
+ol {
+    counter-reset: item;
+    margin-left: 0;
+    padding-left: 0;
+}
+li {
+    display: block;
+    margin-bottom: .5em;
+    margin-left: 2em;
+}
+li:before {
+    display: inline-block;
+    content: "[" counter(item) "] ";
+    counter-increment: item;
+    width: 2em;
+    margin-left: -2em;
+}
+-->
+</style>
+<head>
+  <title>PEVD Toolbox</title>
+  <meta name="keywords" content="PEVD">
+  <meta name="description" content="PEVD">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "index.html"; };
+  </script>
+  <script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+</head>
+<body>
+  <a name="_top"></a>
+  <h1>Polynomial EVD and Algorithms</h1>
+
+  <p>Polynomial matrices arise, for example, in many broadband array
+     or multichannel signal processing problems, where explicit lags
+    between channels need to be considered, and the phase difference
+    captured by a (narrowband) instantaneous covariance matrix would
+    be insufficient. The resulting space-time covariance matrix
+    therefore contains auto- and cross-correlation sequences as
+    entries; its z-transform, the cross power spectral density (CSD)
+    matrix, is a polynomial matrix. The symmetry structure of this
+    matrix is an extension of the Hermitian property to a
+    parahermitian matrix: the polynomial matrix identical to its
+    Hermitian transposed, time reversed version.</p>
+
+    <p>This toolbox provides algorithms to extend the utility of the
+    eigenvalue decomposition (EVD) to the polynomial case via a
+    polynomial EVD (PEVD). The PEVD provides a factorisation of a
+    parahermitian matrix 
+    $$
+       \small{\boldsymbol{R}(z) \approx \boldsymbol{H}(z)
+       \boldsymbol{D}(z) \tilde{\boldsymbol{H}}(z)}
+    $$
+    where \(\small{\boldsymbol{H}(z)}\) is a paraunitary matrix such
+that the product with its parahermitian, \(\small{\tilde{\boldsymbol{H}}(z)}\),
+    yields \(\small{\boldsymbol{H}(z)\tilde{\boldsymbol{H}}(z)=\mathbf{I}}\).
+    The parahermitian \(\small{\boldsymbol{D}(z)}\) is diagonalised 
+    $$
+      \small{\boldsymbol{D}(z) = \left[ \begin{array}{cccc}
+              D_1(z) & & & \\
+               & D_2(z) & & \\
+               & & \ddots & \\
+               & & & D_M(z)
+              \end{array} \right]}
+    $$
+    and spectrally majorised such that the power spectral densities
+    \(\small{D_m(e^{j\Omega}) =D_m(z)|_{z=e^{j\Omega}}}\) are ordered at
+    all frequencies:
+    $$
+       \small{D_m(e^{j\Omega}) \geq D_{m+1}(e^{j\Omega}) \qquad
+         \forall m=1 \dots (M-1) \quad \forall \Omega} \quad.
+    $$
+    The approximation sign in the PEVD factorisation can generally be achieved
+    well with FIR paraunitary matrices of sufficiently high order.</p>
+
+    <p> The iterative PEVD algorithms within this toolbox fall into two families of algorithms:
+    2nd order sequential best rotation (SBR2) and sequential matrix
+    diagonalisation (SMD) algorithms. Iterative by nature, these
+    algorithms will aim to diagonalise a parahermitian matrix by means
+    of paraunitary (i.e. lossless) matrices. All algorithms have been
+    proven to convergence towards a diagonal matrix. Additionally,
+    both SBR2 and SMD algorithms enforce (but cannot guarantee)
+    spectral majorisation, i.e. the power spectral densities along the
+    main diagonal of the CSD matrix will be strictly order at all
+    frequencies.</p>
+
+    <p>Please note that the SBR2 algorithm is subject of a patent
+    owned by QinetiQ. QinetiQ has given permission for its free use in
+    university research, but at present its use in a commercial
+    application without license from QinetiQ would be an infringement
+    of the patent.</p>
+
+    <p>Details of the above PEVD algorithms are covered in the
+    following publications:
+      <ol>
+         <li> J.G. McWhirter, P.D. Baxter, T. Cooper, S. Redif, and
+              J. Foster, <a href="http://ieeexplore.ieee.org/xpl/login.jsp?tp=&arnumber=4156408" target="_blank">"An
+              EVD Algorithm for Para-Hermitian Polynomial
+              Matrices,"</a> IEEE Transactions on Signal Processing,
+              vol. 55, no. 5, pp. 2158-2169, May 2007.</li>
+         <li> S. Redif, J.G. McWhirter, and S. Weiss,
+              <a href="http://ieeexplore.ieee.org/xpl/login.jsp?tp=&arnumber=5962374" target="_blank">"Design
+              of FIR Paraunitary Filter Banks for Subband Coding Using
+              a Polynomial Eigenvalue Decomposition,"</a> IEEE
+              Transactions on Signal Processing, vol. 59, no. 11,
+              pp. 5253-5264, Nov 2011.</li>
+         <li> S. Redif, S. Weiss, and
+              J.G. McWhirter, <a href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?tp=&arnumber=6945850"
+              target="_blank">"Sequential Matrix Diagonalisation
+              Algorithms for Polynomial EVD of Parahermitian
+              Matrices,"</a> IEEE Transactions on Signal
+              Processing, in press.</li>
+     </ol>
+  </p>
+
+</body>
+</html>

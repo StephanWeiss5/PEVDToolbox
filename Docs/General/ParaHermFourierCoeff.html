@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ParaHermFourierCoeff</title>
+  <meta name="keywords" content="ParaHermFourierCoeff">
+  <meta name="description" content="R0 = ParaHermFourierCoeff(R,f0);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>ParaHermFourierCoeff
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>R0 = ParaHermFourierCoeff(R,f0);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function R0 = ParaHermFourierCoeff(R,f0); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> R0 = ParaHermFourierCoeff(R,f0);
+
+  Given a MxMxL parahermitian matrix in the time domain, this function 
+  evaluates the Fourier coefficient matrix at normalised frequency f0.
+  The normalisation is such that f0 = 0 is DC, and f0 = 1 the sampling 
+  rate.
+
+  Input parameters:
+      R      MxMxL parahermitian matrix in the time/coefficient domain
+      f0     normalised frequenc [0...1]
+
+  Output parameter:
+      R0     MxM Fourier coefficient matrix at norm. freq. f0</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function R0 = ParaHermFourierCoeff(R,f0);</a>
+0002 <span class="comment">% R0 = ParaHermFourierCoeff(R,f0);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  Given a MxMxL parahermitian matrix in the time domain, this function</span>
+0005 <span class="comment">%  evaluates the Fourier coefficient matrix at normalised frequency f0.</span>
+0006 <span class="comment">%  The normalisation is such that f0 = 0 is DC, and f0 = 1 the sampling</span>
+0007 <span class="comment">%  rate.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%  Input parameters:</span>
+0010 <span class="comment">%      R      MxMxL parahermitian matrix in the time/coefficient domain</span>
+0011 <span class="comment">%      f0     normalised frequenc [0...1]</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%  Output parameter:</span>
+0014 <span class="comment">%      R0     MxM Fourier coefficient matrix at norm. freq. f0</span>
+0015 
+0016 <span class="comment">% S. Weiss, 18/4/2021</span>
+0017 
+0018 <span class="comment">% parameters</span>
+0019 [M,~,L] = size(R);
+0020 Maxtau = (L-1)/2;
+0021 
+0022 <span class="comment">% Fourier coefficient</span>
+0023 R0 = zeros(M,M);
+0024 <span class="keyword">for</span> m = 1:M,
+0025    <span class="keyword">for</span> mu = 1:(m-1),
+0026       R0(mu,m) = squeeze(R(mu,m,:)).'*exp(-sqrt(-1)*2*pi*f0*(-Maxtau:Maxtau)');
+0027    <span class="keyword">end</span>;
+0028    R0(m,m) = .5*squeeze(R(m,m,:)).'*exp(-sqrt(-1)*2*pi*f0*(-Maxtau:Maxtau)');
+0029 <span class="keyword">end</span>;
+0030 R0 = R0+R0';
+0031</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

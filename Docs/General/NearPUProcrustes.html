@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of NearPUProcrustes</title>
+  <meta name="keywords" content="NearPUProcrustes">
+  <meta name="description" content="NearPUProcrustes(A,NFTmax,PUerror);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>NearPUProcrustes
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>NearPUProcrustes(A,NFTmax,PUerror);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [Qstar,ePU,Nfft] = NearPUProcrustes(A,NDFTmax,PUerror); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> NearPUProcrustes(A,NFTmax,PUerror); 
+
+ Qstar = NearPUProcrustes(A,NFTmax,PUerror) takes a near-paraunitary matrix A
+ and calculates a bin-wise Procrustes solution in Qstar. The DFT size is iter-
+ atively increased until either a threshold for the error in paraunitary, 
+ PUerror, is met, or a maximum DFT size NDFTmax is reached.
+ 
+ Near PU means that A(z) should only possess real positive singular values on the
+ unit circle.
+
+ [Qstar,ePU,NDFT] = NearPUProcrustes(A,NFTmax,PUerror) additionally returns the
+ reached error in paraunitarity as the required DFT length.
+
+ Input parameters:
+    A          MxMxL matrix to be approximated (polynomial coefficients)
+    NDFTmax    maximum DFT length where iterations are stops
+    PUerror    threshold for error in paraunitarity
+
+ Output parameters:
+    Qstar      MxMxL2 Procrustes solution (Polynomial coefficients)
+    ePU        paraunitarity error achieved by the solution
+    Nfft       DFT length at which iterations terminated</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="PUMismatch.html" class="code" title="function e = PUMismatch(Q);">PUMismatch</a>	PUMismatch(Q)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Qstar,ePU,Nfft] = NearPUProcrustes(A,NDFTmax,PUerror);</a>
+0002 <span class="comment">% NearPUProcrustes(A,NFTmax,PUerror);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Qstar = NearPUProcrustes(A,NFTmax,PUerror) takes a near-paraunitary matrix A</span>
+0005 <span class="comment">% and calculates a bin-wise Procrustes solution in Qstar. The DFT size is iter-</span>
+0006 <span class="comment">% atively increased until either a threshold for the error in paraunitary,</span>
+0007 <span class="comment">% PUerror, is met, or a maximum DFT size NDFTmax is reached.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Near PU means that A(z) should only possess real positive singular values on the</span>
+0010 <span class="comment">% unit circle.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% [Qstar,ePU,NDFT] = NearPUProcrustes(A,NFTmax,PUerror) additionally returns the</span>
+0013 <span class="comment">% reached error in paraunitarity as the required DFT length.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Input parameters:</span>
+0016 <span class="comment">%    A          MxMxL matrix to be approximated (polynomial coefficients)</span>
+0017 <span class="comment">%    NDFTmax    maximum DFT length where iterations are stops</span>
+0018 <span class="comment">%    PUerror    threshold for error in paraunitarity</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Output parameters:</span>
+0021 <span class="comment">%    Qstar      MxMxL2 Procrustes solution (Polynomial coefficients)</span>
+0022 <span class="comment">%    ePU        paraunitarity error achieved by the solution</span>
+0023 <span class="comment">%    Nfft       DFT length at which iterations terminated</span>
+0024 
+0025 <span class="comment">% S. Weiss, UoS, 1/2/2025</span>
+0026 
+0027 <span class="comment">%----------------------------------------------------------------------------</span>
+0028 <span class="comment">%  parameters and initialisations</span>
+0029 <span class="comment">%----------------------------------------------------------------------------</span>
+0030 [M,~,L] = size(A);
+0031 Nfft = 2^(ceil(log2(L)));
+0032 
+0033 Af = fft(A,Nfft,3);
+0034 Qf = zeros(M,M,Nfft);
+0035 <span class="keyword">for</span> k = 1:Nfft,
+0036    [u,~,v] = svd(squeeze(Af(:,:,k)));
+0037    Qf(:,:,k) = u*v';
+0038 <span class="keyword">end</span>;
+0039          
+0040 <span class="comment">%----------------------------------------------------------------------------</span>
+0041 <span class="comment">%  iteration</span>
+0042 <span class="comment">%----------------------------------------------------------------------------</span>
+0043 IterCrit = 1; 
+0044 <span class="keyword">while</span> IterCrit == 1,
+0045    Nfft = Nfft*2;
+0046    <span class="comment">% calculate bins that had previously not been considered</span>
+0047    Amod = A;
+0048    <span class="keyword">for</span> ll = 1:L, Amod(:,:,ll) = Amod(:,:,ll)*exp(-1i*2*pi/Nfft*(ll-1)); <span class="keyword">end</span>;
+0049    Afrem = fft(Amod,Nfft/2,3);       <span class="comment">% contains the remaining, unconsidered DFT bins</span>
+0050    <span class="comment">% only calculate bin-wise SVDs in bins that had not been evaluated yet</span>
+0051    Qfnew = zeros(M,M,Nfft);
+0052    Qfnew(:,:,1:2:end) = Qf;
+0053    <span class="keyword">for</span> k = 1:1:Nfft/2,
+0054      [u,~,v] = svd(Afrem(:,:,k));
+0055      Qfnew(:,:,2*k)=u*v';
+0056    <span class="keyword">end</span>;
+0057    
+0058    <span class="comment">% perform time-domain reconstruction</span>
+0059    Qnew = circshift(ifft(Qfnew,Nfft,3),[0 0 Nfft/2]);   
+0060    <span class="comment">% trim</span>
+0061    p = squeeze(sum(sum(abs(Qnew).^2,1),2));                     <span class="comment">% energy per coefficient</span>
+0062 <span class="comment">%   plot(10*log10(p)); drawnow; pause;</span>
+0063    NonZeroIndicesPre = find(10*log10(p)&gt;-300);                  <span class="comment">% find range of non-zero coeff.</span>
+0064    NStart = NonZeroIndicesPre(1); NEnd = NonZeroIndicesPre(end);
+0065    Qstar = Qnew(:,:,NStart:NEnd);
+0066    <span class="comment">% check error in paraunitarity</span>
+0067    ePU = <a href="PUMismatch.html" class="code" title="function e = PUMismatch(Q);">PUMismatch</a>(Qstar);
+0068     
+0069    <span class="keyword">if</span> (ePU&lt;PUerror)||(Nfft&gt;NDFTmax/2),
+0070       IterCrit=0;
+0071    <span class="keyword">else</span>
+0072       Qf = Qfnew;
+0073    <span class="keyword">end</span>;   
+0074 <span class="keyword">end</span>;      
+0075    
+0076    
+0077    
+0078    
+0079    
+0080</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

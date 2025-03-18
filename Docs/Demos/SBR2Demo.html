@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of SBR2Demo</title>
+  <meta name="keywords" content="SBR2Demo">
+  <meta name="description" content="SBR2Demo(SourceSwitch);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html Demos -->
+<h1>SBR2Demo
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>SBR2Demo(SourceSwitch);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function SBR2Demo(SourceSwitch); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SBR2Demo(SourceSwitch);
+
+  SBR2Demo(SourceSwitch) demonstrates the polynomial EVD approximated by 
+  the function SBR2() for different type of parahermitian matrices. The
+  input parameter SourceSwitch can be selected as:
+
+  SBR2Demo('Random') produces an abritrary complex valued 5x5 polynomial 
+  parahermitian matrix of order 10.
+
+  SBR2Demo('Simple1') decomposes a 3x3 real valued polynomial parahermitian 
+  matrix R(z) of order 4:
+                | 1     -.4*z       0     |
+       R(z) =   | -.4*z   1     .5*z^{-2} |
+                | 0     .5*z^2      3     |     
+
+  SBR2Demo('Simple2') decomposes a 5x5 complex valued polynomial 
+  parahermitian matrix R(z) of order 4:
+                |    1        .5*z^2  -.4j*z^{-1}    0   .2j*z^2 |
+                | .5*z^{-2}      1         0         0       0   |
+       R(z) =   |   .4j*z        0         3      .3z^{-1}   0   |
+                |    0           0       .3*z       .5       0   |
+                |-.2j*z^{-2}     0         0         0      .25  |
+  This matrix admits a PEVD with a non-polynomial Gamma(z).
+
+  The function generates a number of outputs to highlight diagonalisation
+  and spectral majorisation.
+
+  Input parameter:
+       SourceSwitch       selects parahermitian matrx to be decomposed
+                          default: 'Random'
+  Output parameter: none</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Decompositions/SBR2.html" class="code" title="function [H,Gamma] = SBR2(R,maxiter,epsilon,Mu,vers);">SBR2</a>	[H,Gamma] = SBR2(R,maxiter,epsilon,mu,vers);</li><li><a href="../General/ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>	H = ParaHerm(G)</li><li><a href="../General/PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>	H = PolyMatConv(F,G);</li><li><a href="../General/PolyMatDiagSpec.html" class="code" title="function P = PolyMatDiagSpec(H,Ndft);">PolyMatDiagSpec</a>	P = PolyMatDiagSpec(R,Ndft);</li><li><a href="../General/PolyMatDisplay.html" class="code" title="function PolyMatDisplay(H,t,mode);">PolyMatDisplay</a>	PolyMatDisplay(H,t,mode);</li><li><a href="../General/PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>	N = PolyMatNorm(H,spec);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function SBR2Demo(SourceSwitch);</a>
+0002 <span class="comment">%SBR2Demo(SourceSwitch);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  SBR2Demo(SourceSwitch) demonstrates the polynomial EVD approximated by</span>
+0005 <span class="comment">%  the function SBR2() for different type of parahermitian matrices. The</span>
+0006 <span class="comment">%  input parameter SourceSwitch can be selected as:</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%  SBR2Demo('Random') produces an abritrary complex valued 5x5 polynomial</span>
+0009 <span class="comment">%  parahermitian matrix of order 10.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%  SBR2Demo('Simple1') decomposes a 3x3 real valued polynomial parahermitian</span>
+0012 <span class="comment">%  matrix R(z) of order 4:</span>
+0013 <span class="comment">%                | 1     -.4*z       0     |</span>
+0014 <span class="comment">%       R(z) =   | -.4*z   1     .5*z^{-2} |</span>
+0015 <span class="comment">%                | 0     .5*z^2      3     |</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%  SBR2Demo('Simple2') decomposes a 5x5 complex valued polynomial</span>
+0018 <span class="comment">%  parahermitian matrix R(z) of order 4:</span>
+0019 <span class="comment">%                |    1        .5*z^2  -.4j*z^{-1}    0   .2j*z^2 |</span>
+0020 <span class="comment">%                | .5*z^{-2}      1         0         0       0   |</span>
+0021 <span class="comment">%       R(z) =   |   .4j*z        0         3      .3z^{-1}   0   |</span>
+0022 <span class="comment">%                |    0           0       .3*z       .5       0   |</span>
+0023 <span class="comment">%                |-.2j*z^{-2}     0         0         0      .25  |</span>
+0024 <span class="comment">%  This matrix admits a PEVD with a non-polynomial Gamma(z).</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%  The function generates a number of outputs to highlight diagonalisation</span>
+0027 <span class="comment">%  and spectral majorisation.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%  Input parameter:</span>
+0030 <span class="comment">%       SourceSwitch       selects parahermitian matrx to be decomposed</span>
+0031 <span class="comment">%                          default: 'Random'</span>
+0032 <span class="comment">%  Output parameter: none</span>
+0033 
+0034 <span class="comment">% S. Weiss, University of Southampton, 30/8/2005</span>
+0035 
+0036 <span class="keyword">if</span> nargin==0,
+0037    SourceSwitch=<span class="string">'Random'</span>;
+0038 <span class="keyword">end</span>;
+0039 
+0040 disp(<span class="string">'2nd Order Sequential Best Rotation (SBR2) Demo'</span>);
+0041 disp(<span class="string">'----------------------------------------------'</span>);
+0042 
+0043 <span class="comment">%--------------------------------------</span>
+0044 <span class="comment">%  Define Scenario</span>
+0045 <span class="comment">%--------------------------------------</span>
+0046 <span class="comment">% obtain example parahermitian matrix</span>
+0047 <span class="keyword">if</span> strcmp(SourceSwitch,<span class="string">'Random'</span>)==1,
+0048    A = randn(5,5,6) + sqrt(-1)*randn(5,5,6);;
+0049    R = <a href="../General/PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(A,<a href="../General/ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(A));
+0050 <span class="keyword">elseif</span> strcmp(SourceSwitch,<span class="string">'Simple1'</span>)==1,
+0051    R        = zeros(3,3,5);
+0052    R(:,:,3) = diag([1 1 3]);
+0053    R(1,2,1) = .5;
+0054    R(2,1,5) = .5;
+0055    R(1,2,2) = -.4;
+0056    R(2,1,4) = -.4;
+0057 <span class="keyword">elseif</span> strcmp(SourceSwitch,<span class="string">'Simple2'</span>)==1,
+0058    R        = zeros(5,5,5);
+0059    R(:,:,3) = diag([1 1 3 .5 .25]);
+0060    R(1,2,1) = .5;
+0061    R(2,1,5) = .5;
+0062    R(1,3,4) = -.4*sqrt(-1);
+0063    R(3,1,2) = .4*sqrt(-1);
+0064    R(1,5,1) = .2*sqrt(-1);
+0065    R(5,1,5) = -.2*sqrt(-1);
+0066    R(4,3,2) = .3;
+0067    R(3,4,4) = .3;
+0068 <span class="keyword">else</span>                    
+0069    error(<span class="string">'option for input parameter SourceSwitch not implemented'</span>);
+0070 <span class="keyword">end</span>;  
+0071 
+0072 <span class="comment">%---------------------------------------</span>
+0073 <span class="comment">%  Calculate PEVD via SBR2</span>
+0074 <span class="comment">%---------------------------------------</span>
+0075 <span class="comment">% set parameters</span>
+0076 maxiter = 100;                <span class="comment">% max number of iterations</span>
+0077 epsilon = 0.001;              <span class="comment">% alternative stopping criterion</span>
+0078 mu = 0;                       <span class="comment">% truncate true zeroes</span>
+0079 <span class="comment">% decomposition</span>
+0080 [H,Gamma] = <a href="../Decompositions/SBR2.html" class="code" title="function [H,Gamma] = SBR2(R,maxiter,epsilon,Mu,vers);">SBR2</a>(R,maxiter,epsilon,mu,<span class="string">'SBR2'</span>);
+0081 
+0082 <span class="comment">%---------------------------------------</span>
+0083 <span class="comment">%  Display resulting matrices</span>
+0084 <span class="comment">%---------------------------------------</span>
+0085 <span class="comment">% display original matrix</span>
+0086 figure(1); clf; 
+0087 L=size(R,3);
+0088 t=(-(L-1)/2:(L-1)/2);
+0089 <a href="../General/PolyMatDisplay.html" class="code" title="function PolyMatDisplay(H,t,mode);">PolyMatDisplay</a>(abs(R),t);
+0090 disp(<span class="string">'Figure 1: original parahermitian matrix R(z)'</span>);
+0091 
+0092 <span class="comment">% display paraunitary matrix</span>
+0093 figure(2); clf;
+0094 L=size(H,3);
+0095 <a href="../General/PolyMatDisplay.html" class="code" title="function PolyMatDisplay(H,t,mode);">PolyMatDisplay</a>(abs(H));
+0096 disp(<span class="string">'Figure 2: paraunitary matrix H(z)'</span>);
+0097 
+0098 <span class="comment">% display diagonalised matrix</span>
+0099 figure(3); clf;
+0100 L=size(Gamma,3);
+0101 t=(-(L-1)/2:(L-1)/2);
+0102 <a href="../General/PolyMatDisplay.html" class="code" title="function PolyMatDisplay(H,t,mode);">PolyMatDisplay</a>(abs(Gamma),t);
+0103 disp(<span class="string">'Figure 3: diagonalised matrix Gamma(z)'</span>);
+0104 
+0105 <span class="comment">% demonstrate approximate spectral majorisation</span>
+0106 figure(4); clf;
+0107 Ndft = max([256,size(Gamma,3)]); 
+0108 P = <a href="../General/PolyMatDiagSpec.html" class="code" title="function P = PolyMatDiagSpec(H,Ndft);">PolyMatDiagSpec</a>(Gamma,Ndft);
+0109 plot((0:Ndft-1)/Ndft,10*log10(abs(P)));
+0110 xlabel(<span class="string">'normalised angular frequency \Omega/(2\pi)'</span>);
+0111 ylabel(<span class="string">'power spectral densities / [dB]'</span>);
+0112 disp(<span class="string">'Figure 4: PSDs of diagonal elements of Gamma(z)'</span>);
+0113    
+0114 <span class="comment">%---------------------------------------</span>
+0115 <span class="comment">%  Check result quantitatively</span>
+0116 <span class="comment">%---------------------------------------</span>
+0117 <span class="comment">% remaining off-diagonal energy</span>
+0118 N1 = <a href="../General/PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>(R);
+0119 N2 = <a href="../General/PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>(Gamma,<span class="string">'OffDiag'</span>);
+0120 disp(sprintf(<span class="string">'ratio off-diagonal/total energy: %f (%f dB)'</span>,<span class="keyword">...</span>
+0121      [N2/N1, 10*log10(N2/N1)]));
+0122 
+0123 <span class="comment">% accuracy of decomposition and reconstruction</span>
+0124 R2 = <a href="../General/PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(<a href="../General/ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(H),<a href="../General/PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Gamma,H));
+0125 L  = size(R,3);
+0126 L2 = size(R2,3);
+0127 Indices = (L2+1)/2 + ( -(L-1)/2:(L-1)/2 );
+0128 N3 = <a href="../General/PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>(R-R2(:,:,Indices));
+0129 disp(sprintf(<span class="string">'error  |R(z) -  H~(z)Gamma(z)H(z)| = %f (%f db)'</span>,<span class="keyword">...</span>
+0130      [N3, 10*log10(N3)]));</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

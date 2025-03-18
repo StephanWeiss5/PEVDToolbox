@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PUPolyMatTrim</title>
+  <meta name="keywords" content="PUPolyMatTrim">
+  <meta name="description" content="[H2,rho] = PUPolyMatTrim(H1,gamma)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PUPolyMatTrim
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>[H2,rho] = PUPolyMatTrim(H1,gamma)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [H2,rho] = PUPolyMatTrim(H1,gamma) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">[H2,rho] = PUPolyMatTrim(H1,gamma)
+ 
+  H2=PUPolyMatTrim(H1) trims the time dimension of a paraunitary matrix by
+  removing outer matrix coefficients. The trimming is performed from both
+  ends, and will remove the matrix coefficient with the smallest Frobenius
+  norm, such that the total energy of the trimmed parts does not exceed  
+  one permille of the total energy in H1.
+ 
+  H2=PUPolyMatTrim(H1,gamma) trims such that the ratio between the removed 
+  and total energy of R1 is less than gamma, with 0&lt;=gamma&lt;1.
+
+  [H2,rho]=PUPolyMatTrim(H1) or [H2,rho]=PUPolyMatTrim(H1,r)
+  additionally returns the error in paraunitarity --- the norm of 
+  (H2*~H2-I) --- after trimming in rho.
+  
+  This function is based on the 'trim' operation described in [1,2].
+
+  Input parameters:
+     H1      paraunitary matrix
+     gamma   maximum ratio between the maximum energy removed at outer lags 
+             and the total energy 
+             default: 1/1000
+  
+  Output parameters:
+     H2      trimmed parahermitian matrix
+     rho     error in paraunitarity
+
+  References:
+  [1] J.G. McWhirter, P.D. Baxter, T. Cooper, S. Redif, and J. Foster, &quot;An EVD 
+      Algorithm for Para-Hermitian Polynomial Matrices,&quot; IEEE Transactions on 
+      Signal Processing, vol. 55, no. 5, pp. 2158-2169, May 2007.
+  [2] C.H. Ta and S. Weiss, &quot;Shortening the Order of Paraunitary Matrices in  
+      SBR2 Algorithm&quot;, 6th International Conference on Information, Communi-
+      cations &amp; Signal Processing, Singapore, pp. 1-5, Dec. 2007.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>	H = ParaHerm(G)</li><li><a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>	H = PolyMatConv(F,G);</li><li><a href="PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>	N = PolyMatNorm(H,spec);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Demos/PMUSICDemo.html" class="code" title="">PMUSICDemo</a>	function SpectralMajorisationDemo();</li><li><a href="PUPolyMatTrimRowCorr.html" class="code" title="function [H2,rho] = PUPolyMatTrimRowCorr(H1,Mu)">PUPolyMatTrimRowCorr</a>	[H2,rho] = PUPolyMatTrimRowCorr(H1,Mu)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [H2,rho] = PUPolyMatTrim(H1,gamma)</a>
+0002 <span class="comment">%[H2,rho] = PUPolyMatTrim(H1,gamma)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  H2=PUPolyMatTrim(H1) trims the time dimension of a paraunitary matrix by</span>
+0005 <span class="comment">%  removing outer matrix coefficients. The trimming is performed from both</span>
+0006 <span class="comment">%  ends, and will remove the matrix coefficient with the smallest Frobenius</span>
+0007 <span class="comment">%  norm, such that the total energy of the trimmed parts does not exceed</span>
+0008 <span class="comment">%  one permille of the total energy in H1.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  H2=PUPolyMatTrim(H1,gamma) trims such that the ratio between the removed</span>
+0011 <span class="comment">%  and total energy of R1 is less than gamma, with 0&lt;=gamma&lt;1.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%  [H2,rho]=PUPolyMatTrim(H1) or [H2,rho]=PUPolyMatTrim(H1,r)</span>
+0014 <span class="comment">%  additionally returns the error in paraunitarity --- the norm of</span>
+0015 <span class="comment">%  (H2*~H2-I) --- after trimming in rho.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%  This function is based on the 'trim' operation described in [1,2].</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%  Input parameters:</span>
+0020 <span class="comment">%     H1      paraunitary matrix</span>
+0021 <span class="comment">%     gamma   maximum ratio between the maximum energy removed at outer lags</span>
+0022 <span class="comment">%             and the total energy</span>
+0023 <span class="comment">%             default: 1/1000</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%  Output parameters:</span>
+0026 <span class="comment">%     H2      trimmed parahermitian matrix</span>
+0027 <span class="comment">%     rho     error in paraunitarity</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%  References:</span>
+0030 <span class="comment">%  [1] J.G. McWhirter, P.D. Baxter, T. Cooper, S. Redif, and J. Foster, &quot;An EVD</span>
+0031 <span class="comment">%      Algorithm for Para-Hermitian Polynomial Matrices,&quot; IEEE Transactions on</span>
+0032 <span class="comment">%      Signal Processing, vol. 55, no. 5, pp. 2158-2169, May 2007.</span>
+0033 <span class="comment">%  [2] C.H. Ta and S. Weiss, &quot;Shortening the Order of Paraunitary Matrices in</span>
+0034 <span class="comment">%      SBR2 Algorithm&quot;, 6th International Conference on Information, Communi-</span>
+0035 <span class="comment">%      cations &amp; Signal Processing, Singapore, pp. 1-5, Dec. 2007.</span>
+0036 
+0037 <span class="comment">% S. Weiss and J. Corr, University of Strathclyde, 14/11/2014</span>
+0038 
+0039 <span class="comment">% check input parameters</span>
+0040 <span class="keyword">if</span> nargin&lt;2,
+0041    gamma = 0.001;
+0042 <span class="keyword">end</span>;
+0043 
+0044 <span class="comment">% check limit</span>
+0045 E = gamma*<a href="PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>(H1);
+0046 [M,N,L] = size(H1);
+0047 
+0048 <span class="comment">% trim from sequentially from front or back, where ever the matrix with the</span>
+0049 <span class="comment">% smallest norm can be found, until the desired amount of energy has been</span>
+0050 <span class="comment">% removed</span>
+0051 Etrim = 0;
+0052 Index_front = 1; Index_back = L;
+0053 Efront = norm(H1(:,:,Index_front),<span class="string">'fro'</span>).^2;
+0054 Eback = norm(H1(:,:,Index_back),<span class="string">'fro'</span>).^2;
+0055 <span class="keyword">while</span> (Etrim + min([Efront Eback])) &lt;= E,
+0056    <span class="keyword">if</span> Eback &gt; Efront,
+0057       <span class="comment">% trim at the front</span>
+0058       Etrim = Etrim + Efront;
+0059       Index_front = Index_front + 1;
+0060       Efront = norm(H1(:,:,Index_front),<span class="string">'fro'</span>).^2;
+0061    <span class="keyword">else</span>
+0062       <span class="comment">% trim at the back</span>
+0063       Etrim = Etrim + Eback;
+0064       Index_back = Index_back - 1;
+0065       Eback = norm(H1(:,:,Index_back),<span class="string">'fro'</span>).^2;
+0066    <span class="keyword">end</span>;
+0067 <span class="keyword">end</span>;    
+0068 
+0069 <span class="comment">% output</span>
+0070 H2 = H1(:,:,Index_front:Index_back);
+0071 
+0072 <span class="comment">% prepare additional output parameter if error in paraunitarity is requested</span>
+0073 <span class="keyword">if</span> nargout&gt;1,
+0074    HH2 = <a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(H2,<a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(H2));
+0075    L2 = (size(HH2,3)+1)/2;
+0076    HH2(:,:,L2) = HH2(:,:,L2)-eye(N);
+0077    rho = <a href="PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>(HH2);
+0078 <span class="keyword">end</span>;</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

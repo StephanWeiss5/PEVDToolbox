@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ParaHermIDFT</title>
+  <meta name="keywords" content="ParaHermIDFT">
+  <meta name="description" content="Rt = ParaHermIDFT(Rf,Nfft);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>ParaHermIDFT
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>Rt = ParaHermIDFT(Rf,Nfft);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function Rt = ParaHermDFT(Rf); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">Rt = ParaHermIDFT(Rf,Nfft);
+
+  Rt = ParaHermIDFT(Rf) returns the IDFT of a parahermitian matrix stored in
+  Rf, with indices running from DC to 2pi. The matrix Rf is of dimension MxMxL,
+  where M is the spatial dimension, and L the number of sample points on the
+  unit circle.
+
+  The function returns an odd-length time-domain version, whereby the length
+  is appropriate trimmed in case the time domain support is shorter than the 
+  number of sample points.
+
+  Input parameters:
+    Rf         cross-spectral density matrix
+ 
+  Output parameter:
+    Rt         space-time covariance-type matrix</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Rt = ParaHermDFT(Rf);</a>
+0002 <span class="comment">%Rt = ParaHermIDFT(Rf,Nfft);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  Rt = ParaHermIDFT(Rf) returns the IDFT of a parahermitian matrix stored in</span>
+0005 <span class="comment">%  Rf, with indices running from DC to 2pi. The matrix Rf is of dimension MxMxL,</span>
+0006 <span class="comment">%  where M is the spatial dimension, and L the number of sample points on the</span>
+0007 <span class="comment">%  unit circle.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%  The function returns an odd-length time-domain version, whereby the length</span>
+0010 <span class="comment">%  is appropriate trimmed in case the time domain support is shorter than the</span>
+0011 <span class="comment">%  number of sample points.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%  Input parameters:</span>
+0014 <span class="comment">%    Rf         cross-spectral density matrix</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%  Output parameter:</span>
+0017 <span class="comment">%    Rt         space-time covariance-type matrix</span>
+0018 
+0019 <span class="comment">% S. Weiss, 18/4/2021</span>
+0020 
+0021 [M,~,L] = size(Rf);
+0022 Threshold = 10^(-14);
+0023 
+0024 <span class="comment">% apply inverse DFT</span>
+0025 R_td = ifft(Rf,L,3);
+0026 
+0027 <span class="comment">% rearrange time domain data</span>
+0028 <span class="keyword">if</span> mod(L,2)==0,             <span class="comment">% even length</span>
+0029   dummy = zeros(M,M,L+1);
+0030   dummy(:,:,L/2+1:L+1) = R_td(:,:,1:L/2+1);
+0031   dummy(:,:,1:L/2) = R_td(:,:,L/2+1:L);
+0032 <span class="keyword">else</span>                        <span class="comment">% odd length</span>
+0033   dummy = zeros(M,M,L);
+0034   dummy(:,:,(L+1)/2:L) = R_td(:,:,1:(L+1)/2);
+0035   dummy(:,:,1:(L-1)/2) = R_td(:,:,(L+1)/2+1:L);
+0036 <span class="keyword">end</span>;
+0037   
+0038 <span class="comment">% trim leading and trailing zeros</span>
+0039 L = size(dummy,3);
+0040 Power = zeros((L+1)/2,1);
+0041 <span class="keyword">for</span> l = 1:(L+1)/2,
+0042    Power(l) = norm(dummy(:,:,l),<span class="string">'fro'</span>);
+0043 <span class="keyword">end</span>;
+0044 Index = max(find(cumsum(Power)&lt;Threshold));
+0045 Rt = dummy(:,:,Index+1:L-Index);</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of SubbandCodingDemo</title>
+  <meta name="keywords" content="SubbandCodingDemo">
+  <meta name="description" content="SubbandCodingDemo(SourceSwitch)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html Demos -->
+<h1>SubbandCodingDemo
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>SubbandCodingDemo(SourceSwitch)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function SubbandCodingDemo(SourceSwitch) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SubbandCodingDemo(SourceSwitch)
+
+  Demonstrates the use of SBR2 and SBR2C to the problem of subband coding. 
+  The optional subband coder is given by the paraunitary matrix extracted 
+  by a PEVD. 
+  
+  SubbandCodingDemo(SourceSwitch) provides two demonstrations selected 
+  through the variable SourceSwitch.
+
+  SubbandCodingDemo('MA14') generates a random moving average innovation 
+  filter of order 14, with coefficients drawn from a complex Gaussian 
+  distribution, from which an auto-correlation sequence is derived. This 
+  process is assumed to be multiplexed into 4 subchannels. 
+
+  SubbandCodingDemo('AR4') approximates an autoregressive (RA) process
+  with two complex pole pairs. This AR4 process is approximated by 
+  finite length auto-correlation of order 200.
+
+  SubbandCodingDemo('Simple') uses a short auto-correlation sequence of 
+  order 6, with a demultiplexing into 3 channels.
+
+  The examples 'MA14' and 'AR4' are similar to the examples in [1].
+
+  Reference:
+
+  [1] S. Redif, J.G. McWhirter, and S. Weiss, &quot;Design of FIR Paraunitary 
+      Filter Banks for Subband Coding Using a Polynomial Eignvalue Decompo- 
+      sition,&quot; IEEE Transactions on Signal Processing, vol. 59, no. 11, 
+      pp. 5253-5264, Nov 2011.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Decompositions/SBR2.html" class="code" title="function [H,Gamma] = SBR2(R,maxiter,epsilon,Mu,vers);">SBR2</a>	[H,Gamma] = SBR2(R,maxiter,epsilon,mu,vers);</li><li><a href="../General/CodingGain.html" class="code" title="function C = CodingGain(A);">CodingGain</a>	C = CodingGain(A);</li><li><a href="../General/MuxPolyCovMat.html" class="code" title="function R = MuxPolyCovMat(r,M);">MuxPolyCovMat</a>	R = MuxPolyCovMat(r,M);</li><li><a href="../General/PolyMatDiagSpec.html" class="code" title="function P = PolyMatDiagSpec(H,Ndft);">PolyMatDiagSpec</a>	P = PolyMatDiagSpec(R,Ndft);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function SubbandCodingDemo(SourceSwitch)</a>
+0002 <span class="comment">%SubbandCodingDemo(SourceSwitch)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  Demonstrates the use of SBR2 and SBR2C to the problem of subband coding.</span>
+0005 <span class="comment">%  The optional subband coder is given by the paraunitary matrix extracted</span>
+0006 <span class="comment">%  by a PEVD.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%  SubbandCodingDemo(SourceSwitch) provides two demonstrations selected</span>
+0009 <span class="comment">%  through the variable SourceSwitch.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%  SubbandCodingDemo('MA14') generates a random moving average innovation</span>
+0012 <span class="comment">%  filter of order 14, with coefficients drawn from a complex Gaussian</span>
+0013 <span class="comment">%  distribution, from which an auto-correlation sequence is derived. This</span>
+0014 <span class="comment">%  process is assumed to be multiplexed into 4 subchannels.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%  SubbandCodingDemo('AR4') approximates an autoregressive (RA) process</span>
+0017 <span class="comment">%  with two complex pole pairs. This AR4 process is approximated by</span>
+0018 <span class="comment">%  finite length auto-correlation of order 200.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%  SubbandCodingDemo('Simple') uses a short auto-correlation sequence of</span>
+0021 <span class="comment">%  order 6, with a demultiplexing into 3 channels.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%  The examples 'MA14' and 'AR4' are similar to the examples in [1].</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%  Reference:</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%  [1] S. Redif, J.G. McWhirter, and S. Weiss, &quot;Design of FIR Paraunitary</span>
+0028 <span class="comment">%      Filter Banks for Subband Coding Using a Polynomial Eignvalue Decompo-</span>
+0029 <span class="comment">%      sition,&quot; IEEE Transactions on Signal Processing, vol. 59, no. 11,</span>
+0030 <span class="comment">%      pp. 5253-5264, Nov 2011.</span>
+0031 
+0032 <span class="comment">%  S Weiss, Univ. of Strathclyde, 27/8/14</span>
+0033 
+0034 <span class="keyword">if</span> nargin==0,
+0035    SourceSwitch=<span class="string">'Simple'</span>;
+0036 <span class="keyword">end</span>;
+0037 
+0038 <span class="comment">%---------------------------------------</span>
+0039 <span class="comment">%  Define Scenario</span>
+0040 <span class="comment">%---------------------------------------</span>
+0041 <span class="comment">% create autocorrelation sequence for scenatio</span>
+0042 <span class="keyword">if</span> strcmp(SourceSwitch,<span class="string">'MA14'</span>)==1,
+0043    a = (randn(14,1)+sqrt(-1)*randn(14,1))/sqrt(2);
+0044    r = conv(a,flipud(conj(a)));
+0045    M = 4;
+0046 <span class="keyword">elseif</span> strcmp(SourceSwitch,<span class="string">'AR4'</span>)==1, 
+0047    poles=[0.9*exp(j*0.6283), 0.9*exp(-j*0.6283), 0.85*exp(j*2.8274), 0.85*exp(-j*2.8274)];
+0048    x = [1; zeros(99,1)];
+0049    a = filter(1,poly(poles),x);
+0050    r = conv(a,flipud(conj(a)));
+0051    M = 4;
+0052 <span class="keyword">elseif</span> strcmp(SourceSwitch,<span class="string">'Simple'</span>)==1,
+0053    r = [-j/4 .5 -j 2 j .5 j/4];
+0054    M = 3;
+0055 <span class="keyword">else</span>                    
+0056    error(<span class="string">'option for input parameter SourceSwitch not implemented'</span>);
+0057 <span class="keyword">end</span>;  
+0058 
+0059 <span class="comment">% create parahermitian matrix from autocorrelation sequence</span>
+0060 R = <a href="../General/MuxPolyCovMat.html" class="code" title="function R = MuxPolyCovMat(r,M);">MuxPolyCovMat</a>(r,M);
+0061 
+0062 <span class="comment">%---------------------------------------</span>
+0063 <span class="comment">%  Perform decompositions</span>
+0064 <span class="comment">%---------------------------------------</span>
+0065 <span class="comment">% SBR2</span>
+0066 [H,Gamma]=<a href="../Decompositions/SBR2.html" class="code" title="function [H,Gamma] = SBR2(R,maxiter,epsilon,Mu,vers);">SBR2</a>(R,50,0.00000001,0,<span class="string">'SBR2'</span>);
+0067 P1 = <a href="../General/PolyMatDiagSpec.html" class="code" title="function P = PolyMatDiagSpec(H,Ndft);">PolyMatDiagSpec</a>(Gamma,1024);
+0068 CG1 = <a href="../General/CodingGain.html" class="code" title="function C = CodingGain(A);">CodingGain</a>(Gamma);
+0069 <span class="comment">% SBR2C (SBR2 version optimised for coding gain)</span>
+0070 [H,Gamma_C]=<a href="../Decompositions/SBR2.html" class="code" title="function [H,Gamma] = SBR2(R,maxiter,epsilon,Mu,vers);">SBR2</a>(R,50,0.00000001,0,<span class="string">'SBR2C'</span>);
+0071 CG2 = <a href="../General/CodingGain.html" class="code" title="function C = CodingGain(A);">CodingGain</a>(Gamma_C);
+0072 P2 = <a href="../General/PolyMatDiagSpec.html" class="code" title="function P = PolyMatDiagSpec(H,Ndft);">PolyMatDiagSpec</a>(Gamma_C,1024);
+0073 
+0074 <span class="comment">%---------------------------------------</span>
+0075 <span class="comment">%  Display results</span>
+0076 <span class="comment">%---------------------------------------</span>
+0077 <span class="comment">% numerical results</span>
+0078 disp(<span class="string">'Subband Coding Demo'</span>);
+0079 disp(<span class="string">'-------------------'</span>);
+0080 disp(sprintf(<span class="string">'  coding gain with SBR2:  %f'</span>,CG1));
+0081 disp(sprintf(<span class="string">'  coding gain with SBR2C: %f'</span>,CG2));
+0082 
+0083 <span class="comment">% graphical output</span>
+0084 W=(0:1023)/512;
+0085 figure(1); clf;
+0086 plot(W,10*log10(abs(P1)));
+0087 hold on;
+0088 plot(W,10*log10(abs(P2)),<span class="string">'--'</span>);
+0089 xlabel(<span class="string">'normalised angular frequency \Omega/\pi'</span>);
+0090 ylabel(<span class="string">'power spectral densities / [dB]'</span>);
+0091 disp(<span class="string">'power spectral densities are displayed in Figure 1:'</span>)
+0092 disp(<span class="string">'  solid lines: PSDs achieved by SBR2'</span>); 
+0093 disp(<span class="string">'  dashed lines: PSDs achieved by SBR2C'</span>); 
+0094</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

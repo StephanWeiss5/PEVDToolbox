@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PssMusic</title>
+  <meta name="keywords" content="PssMusic">
+  <meta name="description" content="function [Pss,Ps] = PssMusic(Q,L,K,angles);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PssMusic
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [Pss,Ps] = PssMusic(Q,L,K,angles);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [Pss,Ps,AA] = PssMusic(Q,L,K,angles,epsilon); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function [Pss,Ps] = PssMusic(Q,L,K,angles);
+
+ Polynomial MUSIC algorithm.
+
+ Input parameter:
+   Q      polynomial (spatio-temporal) modal matrix
+   L      number of sources
+   K      number of frequency bins evaluated
+   angles possible angles of arrival to be evaluated
+          (measured in rad against broadside)
+   epsilon   regularisation constant to avoid division by zero
+
+ Output parameters:
+   Pss    polynomial spatio-spectral music
+   Ps     polynomial spatial music
+
+ S. Weiss, University of Strathclyde, 30/1/2013</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="BroadbandSteeringVector.html" class="code" title="function S = BroadbandSteeringVector(M,alpha,T);">BroadbandSteeringVector</a>	S = BroadbandSteeringVector(M,alpha,T);</li><li><a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>	H = ParaHerm(G)</li><li><a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>	H = PolyMatConv(F,G);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Demos/PMUSICDemo.html" class="code" title="">PMUSICDemo</a>	function SpectralMajorisationDemo();</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Pss,Ps,AA] = PssMusic(Q,L,K,angles,epsilon);</a>
+0002 <span class="comment">% function [Pss,Ps] = PssMusic(Q,L,K,angles);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Polynomial MUSIC algorithm.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Input parameter:</span>
+0007 <span class="comment">%   Q      polynomial (spatio-temporal) modal matrix</span>
+0008 <span class="comment">%   L      number of sources</span>
+0009 <span class="comment">%   K      number of frequency bins evaluated</span>
+0010 <span class="comment">%   angles possible angles of arrival to be evaluated</span>
+0011 <span class="comment">%          (measured in rad against broadside)</span>
+0012 <span class="comment">%   epsilon   regularisation constant to avoid division by zero</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Output parameters:</span>
+0015 <span class="comment">%   Pss    polynomial spatio-spectral music</span>
+0016 <span class="comment">%   Ps     polynomial spatial music</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% S. Weiss, University of Strathclyde, 30/1/2013</span>
+0019 
+0020 M = size(Q,1);
+0021 
+0022 Qn = Q(L+1:M,:,:);
+0023 Rn = <a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(<a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(Qn),Qn);
+0024 
+0025 
+0026 <span class="keyword">for</span> i = 1:size(angles,2),
+0027     X = <a href="BroadbandSteeringVector.html" class="code" title="function S = BroadbandSteeringVector(M,alpha,T);">BroadbandSteeringVector</a>(M,angles(i),100);
+0028     Y =  <a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(<a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(X),<a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(Rn,X));
+0029     dummy2 = shiftdim(Y,1);
+0030     AA(i,:) = dummy2;
+0031 <span class="keyword">end</span>;
+0032 
+0033 <span class="keyword">if</span> K &lt; size(AA,2),
+0034    disp([<span class="string">'warning: FFT length is shorter than auto-correlation sequence '</span> <span class="keyword">...</span>
+0035          <span class="string">'in function PssMusic()'</span>]);
+0036 <span class="keyword">end</span>;
+0037 
+0038 Pss = 1./(abs(fft(AA,K,2).') + epsilon);
+0039 Ps = 1./abs(AA(:,(size(AA,2)+1)/2) + epsilon);
+0040</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

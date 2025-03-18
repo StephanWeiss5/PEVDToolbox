@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PolyMatNorm</title>
+  <meta name="keywords" content="PolyMatNorm">
+  <meta name="description" content="N = PolyMatNorm(H,spec);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PolyMatNorm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>N = PolyMatNorm(H,spec);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function Fnorm = PolyMatNorm(H,SpecString); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">N = PolyMatNorm(H,spec);
+
+  PolyMatNorm(H) returns the generalised square Frobenius norm of all matrix 
+  elements in the polynomial matrix H(z) represented by H. This norm represents 
+  the the sum over all modulus-squared matrix elements, both spatially and 
+  temporally.
+ 
+  PolyMatNorm(H,'OnDiag') only returns the sum over of all modulus-squared 
+  diagonal elements. 
+  
+  PolyMatNorm(H,'OffDiag') only returns the sum over all off-diagonal modulus
+  squared elements of H(z).
+
+  PolyMatNorm(H,'Full') is the default and considers all matrix elements.
+ 
+  Input parameters:
+     H         MIMO system or polynomial matrix
+     spec      optional parameter:
+               'OnDiag' count on-diagonal elements only
+               'OffDiag' count off-diagonal elements only
+               'Full' count all elements
+               default: 'Full'
+  
+ Output parameters:
+     N         norm</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Demos/ConvergenceDemo.html" class="code" title="function ConvergenceDemo(SourceSwitch);">ConvergenceDemo</a>	ConvergenceDemo(SourceSwitch);</li><li><a href="../Demos/SBR2Demo.html" class="code" title="function SBR2Demo(SourceSwitch);">SBR2Demo</a>	SBR2Demo(SourceSwitch);</li><li><a href="../Demos/SMDDemo.html" class="code" title="function SMDDemo(SourceSwitch);">SMDDemo</a>	SMDDemo(SourceSwitch);</li><li><a href="PHPolyMatTrim.html" class="code" title="function [R2,rho] = PHPolyMatTrim(R1,gamma)">PHPolyMatTrim</a>	[R2,rho] = PHPolyMatTrim(R1,gamma)</li><li><a href="PUPolyMatTrim.html" class="code" title="function [H2,rho] = PUPolyMatTrim(H1,gamma)">PUPolyMatTrim</a>	[H2,rho] = PUPolyMatTrim(H1,gamma)</li><li><a href="PUPolyMatTrimRowCorr.html" class="code" title="function [H2,rho] = PUPolyMatTrimRowCorr(H1,Mu)">PUPolyMatTrimRowCorr</a>	[H2,rho] = PUPolyMatTrimRowCorr(H1,Mu)</li><li><a href="PolyMatAlign.html" class="code" title="function [Shift,error,A2,B2] = PolyMatAlign(A,B);">PolyMatAlign</a>	[Shift,error] = PolyMatAlign(A,B);</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Fnorm = PolyMatNorm(H,SpecString);</a>
+0002 <span class="comment">%N = PolyMatNorm(H,spec);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  PolyMatNorm(H) returns the generalised square Frobenius norm of all matrix</span>
+0005 <span class="comment">%  elements in the polynomial matrix H(z) represented by H. This norm represents</span>
+0006 <span class="comment">%  the the sum over all modulus-squared matrix elements, both spatially and</span>
+0007 <span class="comment">%  temporally.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%  PolyMatNorm(H,'OnDiag') only returns the sum over of all modulus-squared</span>
+0010 <span class="comment">%  diagonal elements.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%  PolyMatNorm(H,'OffDiag') only returns the sum over all off-diagonal modulus</span>
+0013 <span class="comment">%  squared elements of H(z).</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%  PolyMatNorm(H,'Full') is the default and considers all matrix elements.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%  Input parameters:</span>
+0018 <span class="comment">%     H         MIMO system or polynomial matrix</span>
+0019 <span class="comment">%     spec      optional parameter:</span>
+0020 <span class="comment">%               'OnDiag' count on-diagonal elements only</span>
+0021 <span class="comment">%               'OffDiag' count off-diagonal elements only</span>
+0022 <span class="comment">%               'Full' count all elements</span>
+0023 <span class="comment">%               default: 'Full'</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Output parameters:</span>
+0026 <span class="comment">%     N         norm</span>
+0027   
+0028 <span class="comment">%  S. Weiss, UoS, 5/10/2005</span>
+0029   
+0030 <span class="keyword">if</span> nargin==1,
+0031    SpecString=<span class="string">'Full'</span>;
+0032 <span class="keyword">end</span>;
+0033 [M,N,L] = size(H);
+0034 
+0035 Fnorm = 0;
+0036 <span class="keyword">if</span> strcmp(SpecString,<span class="string">'Full'</span>)==1,
+0037    <span class="keyword">for</span> l = 1:L,
+0038       A = H(:,:,l);
+0039       Fnorm = Fnorm + sum(sum(A.*conj(A)));
+0040    <span class="keyword">end</span>;
+0041 <span class="keyword">else</span>
+0042    MNmin = min(M,N);
+0043    Mask = zeros(M,N);
+0044    Mask(1:MNmin,1:MNmin) = eye(MNmin);
+0045    <span class="keyword">if</span> strcmp(SpecString,<span class="string">'OnDiag'</span>)==1,
+0046       Mask = zeros(M,N);
+0047       Mask(1:MNmin,1:MNmin) = eye(MNmin);
+0048    <span class="keyword">elseif</span>  strcmp(SpecString,<span class="string">'OffDiag'</span>)==1,        
+0049       Mask = ones(M,N);
+0050       Mask(1:MNmin,1:MNmin) = Mask(1:MNmin,1:MNmin) - eye(MNmin);
+0051    <span class="keyword">else</span>
+0052       error(<span class="string">'norm option in PolyMatNorm() not defined'</span>);
+0053    <span class="keyword">end</span>;
+0054    <span class="keyword">for</span> l = 1:L,
+0055       A = H(:,:,l).*Mask;
+0056       Fnorm = Fnorm + sum(sum(A.*conj(A)));
+0057    <span class="keyword">end</span>;
+0058 <span class="keyword">end</span>;</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

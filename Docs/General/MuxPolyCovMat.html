@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of MuxPolyCovMat</title>
+  <meta name="keywords" content="MuxPolyCovMat">
+  <meta name="description" content="R = MuxPolyCovMat(r,M);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>MuxPolyCovMat
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>R = MuxPolyCovMat(r,M);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function R = MuxPolyCovMat(r,M); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">R = MuxPolyCovMat(r,M);
+  
+  MuxPolyCovMat(r,M) returns the polynomial covariance matrix arising for a
+  signal characterised by an autocorrelation sequence r that is demulti-
+  plexed into M channels.
+
+  This problem arises e.g. in optimal subband coding [1]. The returned 
+  matrix R is pseudo-circulant.
+
+  Input parameters:
+      r       autocorrelation sequence of input process
+      M       number of subchannels for demultiplexing
+
+  Output parameters:
+      R       MxMxL polynomial covariance matrix
+
+  Reference:
+
+  [1] S. Redif, J.G. McWhirter, and S. Weiss, &quot;Design of FIR Paraunitary 
+      Filter Banks for Subband Coding Using a Polynomial Eigenvalue Decompo- 
+      sition,&quot; IEEE Transactions on Signal Processing, vol. 59, no. 11, 
+      pp. 5253-5264, Nov 2011.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Demos/SubbandCodingDemo.html" class="code" title="function SubbandCodingDemo(SourceSwitch)">SubbandCodingDemo</a>	SubbandCodingDemo(SourceSwitch)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function R = MuxPolyCovMat(r,M);</a>
+0002 <span class="comment">%R = MuxPolyCovMat(r,M);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  MuxPolyCovMat(r,M) returns the polynomial covariance matrix arising for a</span>
+0005 <span class="comment">%  signal characterised by an autocorrelation sequence r that is demulti-</span>
+0006 <span class="comment">%  plexed into M channels.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%  This problem arises e.g. in optimal subband coding [1]. The returned</span>
+0009 <span class="comment">%  matrix R is pseudo-circulant.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%  Input parameters:</span>
+0012 <span class="comment">%      r       autocorrelation sequence of input process</span>
+0013 <span class="comment">%      M       number of subchannels for demultiplexing</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%  Output parameters:</span>
+0016 <span class="comment">%      R       MxMxL polynomial covariance matrix</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%  Reference:</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%  [1] S. Redif, J.G. McWhirter, and S. Weiss, &quot;Design of FIR Paraunitary</span>
+0021 <span class="comment">%      Filter Banks for Subband Coding Using a Polynomial Eigenvalue Decompo-</span>
+0022 <span class="comment">%      sition,&quot; IEEE Transactions on Signal Processing, vol. 59, no. 11,</span>
+0023 <span class="comment">%      pp. 5253-5264, Nov 2011.</span>
+0024 
+0025 <span class="comment">% S Weiss, UoS, 16/9/2004</span>
+0026 <span class="comment">% updated, S Weiss, Strathclyde, 27/8/14</span>
+0027 
+0028 [N1,N2] = size(r);
+0029 <span class="keyword">if</span> N1==1,
+0030    r=r.';
+0031    L=N2;
+0032 <span class="keyword">else</span>
+0033    L=N1;
+0034 <span class="keyword">end</span>;
+0035 <span class="keyword">if</span> mod(L,2)~=1,
+0036    error(<span class="string">'MuxPolyCovMat() fed with an ACS of even length'</span>);
+0037 <span class="keyword">end</span>;  
+0038 Lr = (L+1)/2;             <span class="comment">% number of lags in r to one side</span>
+0039 r  = r(Lr:end);
+0040 LR = ceil((Lr+M-1)/M);    <span class="comment">% number of lags in R to one side</span>
+0041 
+0042 Rfull = toeplitz([r; zeros(2*M,1)]);
+0043 R(:,:,LR) = Rfull(1:M,1:M);
+0044 <span class="keyword">for</span> i = 1:(LR-1),
+0045    R(:,:,LR+i) = Rfull(1:M,i*M+1:(i+1)*M);
+0046    R(:,:,LR-i) = R(:,:,LR+i)';
+0047 <span class="keyword">end</span>;
+0048</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

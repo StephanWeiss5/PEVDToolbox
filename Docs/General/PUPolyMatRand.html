@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PUPolyMatRand</title>
+  <meta name="keywords" content="PUPolyMatRand">
+  <meta name="description" content="H = PUPolyMatRand(M,L,N,mode);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PUPolyMatRand
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>H = PUPolyMatRand(M,L,N,mode);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function H = PUPolyMatRand(M,L,N,mode); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">H = PUPolyMatRand(M,L,N,mode);
+
+  H = PUPolyMatRand(M,L) generates a random MxM paraunitary matrix of order L.
+  The matrix is assembled from L first order elementary paraunitary matrices
+  described in [1],
+
+  V(z) = I - u u' + u u' z^{-1}
+ 
+  where u is an arbitrary unit norm vector. The resulting paraunitary matrix 
+  H(z) is the product of L such elementary paraunitary matrices, s.t.
+    H(z) = H0 + H1 z^{-1} + H2 z^{-2} + ... + HL z^{-L}
+  is represented in a 3-dimensional matrix as
+    H(:,:,1) = H0;
+    H(:,:,2) = H1;
+    H(:,:,3) = H2;
+      ...
+    H(:,:,L) = HL;
+  Paraunitarity means that both PolyMatConv(H,ParaHerm(H)) and 
+  PolyMatConv(ParaHerm(H),H) will result in an identity matrix.
+
+  H = PUPolyMatRand(M,L,N) generates a random paraunitary matrix with a seed
+  value of N. Repeated calls with the same N will results in the same para-
+  unitary matrices.
+
+  H = PUPolyMatRand(M,L,N,'real') generates a real-valyed random paraunitary 
+  while matrix for H = PUPolyMatRand(M,L,N,'complex'), the output will be
+  complex-valued.
+
+  Input parameters:
+     M       spatial dimension of paraunitary matrix
+     L       polynomial order of paraunitary matrix
+     N       seed value for random number generator
+             (optional); default is random;
+     mode    real- or complex valued operation (default is real)
+
+  Output parameter:
+     H       MxMx(L+1) paraunitary matrix
+
+  Reference:
+  [1] P.P. Vaidyanathan: &quot;Multirate Systems and Filter Banks&quot; Prentice
+      Hall, 1993.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>	H = PolyMatConv(F,G);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function H = PUPolyMatRand(M,L,N,mode);</a>
+0002 <span class="comment">%H = PUPolyMatRand(M,L,N,mode);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  H = PUPolyMatRand(M,L) generates a random MxM paraunitary matrix of order L.</span>
+0005 <span class="comment">%  The matrix is assembled from L first order elementary paraunitary matrices</span>
+0006 <span class="comment">%  described in [1],</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%  V(z) = I - u u' + u u' z^{-1}</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  where u is an arbitrary unit norm vector. The resulting paraunitary matrix</span>
+0011 <span class="comment">%  H(z) is the product of L such elementary paraunitary matrices, s.t.</span>
+0012 <span class="comment">%    H(z) = H0 + H1 z^{-1} + H2 z^{-2} + ... + HL z^{-L}</span>
+0013 <span class="comment">%  is represented in a 3-dimensional matrix as</span>
+0014 <span class="comment">%    H(:,:,1) = H0;</span>
+0015 <span class="comment">%    H(:,:,2) = H1;</span>
+0016 <span class="comment">%    H(:,:,3) = H2;</span>
+0017 <span class="comment">%      ...</span>
+0018 <span class="comment">%    H(:,:,L) = HL;</span>
+0019 <span class="comment">%  Paraunitarity means that both PolyMatConv(H,ParaHerm(H)) and</span>
+0020 <span class="comment">%  PolyMatConv(ParaHerm(H),H) will result in an identity matrix.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%  H = PUPolyMatRand(M,L,N) generates a random paraunitary matrix with a seed</span>
+0023 <span class="comment">%  value of N. Repeated calls with the same N will results in the same para-</span>
+0024 <span class="comment">%  unitary matrices.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%  H = PUPolyMatRand(M,L,N,'real') generates a real-valyed random paraunitary</span>
+0027 <span class="comment">%  while matrix for H = PUPolyMatRand(M,L,N,'complex'), the output will be</span>
+0028 <span class="comment">%  complex-valued.</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%  Input parameters:</span>
+0031 <span class="comment">%     M       spatial dimension of paraunitary matrix</span>
+0032 <span class="comment">%     L       polynomial order of paraunitary matrix</span>
+0033 <span class="comment">%     N       seed value for random number generator</span>
+0034 <span class="comment">%             (optional); default is random;</span>
+0035 <span class="comment">%     mode    real- or complex valued operation (default is real)</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%  Output parameter:</span>
+0038 <span class="comment">%     H       MxMx(L+1) paraunitary matrix</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%  Reference:</span>
+0041 <span class="comment">%  [1] P.P. Vaidyanathan: &quot;Multirate Systems and Filter Banks&quot; Prentice</span>
+0042 <span class="comment">%      Hall, 1993.</span>
+0043 
+0044 <span class="comment">%  S. Weiss, University of Strathclyde, 14/12/14</span>
+0045 <span class="comment">%       amended 31/3/23</span>
+0046 
+0047 <span class="comment">%-----------------------------------------------------</span>
+0048 <span class="comment">%   check for optional seed value</span>
+0049 <span class="comment">%-----------------------------------------------------</span>
+0050 CmplxVld=0;
+0051 <span class="keyword">if</span> nargin&gt;2,
+0052    <span class="keyword">if</span> nargin&gt;3,
+0053      randn(<span class="string">'seed'</span>,N);
+0054    <span class="keyword">else</span>
+0055      <span class="keyword">if</span> ischar(N)
+0056       mode = N;
+0057      <span class="keyword">else</span>
+0058       randn(<span class="string">'seed'</span>,N);
+0059      <span class="keyword">end</span>
+0060    <span class="keyword">end</span>;
+0061 <span class="keyword">end</span>;
+0062 <span class="keyword">if</span> strcmp(mode,<span class="string">'complex'</span>)==1,
+0063    CmplxVld=1;
+0064 <span class="keyword">end</span>;
+0065       
+0066 <span class="comment">%-----------------------------------------------------</span>
+0067 <span class="comment">%   generate L-th order paraunitary matrix</span>
+0068 <span class="comment">%-----------------------------------------------------</span>
+0069 <span class="keyword">if</span> CmplxVld==1,
+0070    H=randn(M,M) + sqrt(-1)*randn(M,M);
+0071 <span class="keyword">else</span>,   
+0072    H=randn(M,M);
+0073 <span class="keyword">end</span>;   
+0074 [u,s,v] = svd(H);
+0075 H = u*v';
+0076 <span class="keyword">for</span> i = 1:L,
+0077    <span class="comment">% generate elementary paraunitary matrix</span>
+0078    <span class="keyword">if</span> CmplxVld==1,
+0079       u = randn(M,2)*[1; sqrt(-1)];
+0080    <span class="keyword">else</span>
+0081       u = randn(M,1);
+0082    <span class="keyword">end</span>;
+0083    u = u/norm(u,2);
+0084    U(:,:,1)=eye(M)-u*u';
+0085    U(:,:,2)=u*u';
+0086    <span class="comment">% apply ith elementary PU matrix</span>
+0087    H = <a href="PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(H,U);
+0088  <span class="keyword">end</span>;
+0089</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

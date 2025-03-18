@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of SpaceTimeCovMat</title>
+  <meta name="keywords" content="SpaceTimeCovMat">
+  <meta name="description" content="[R,tau] = SpaceTimeCovMat(X,MaxLag);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>SpaceTimeCovMat
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>[R,tau] = SpaceTimeCovMat(X,MaxLag);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [R,tau] = SpaceTimeCovMat(X,MaxLag); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">[R,tau] = SpaceTimeCovMat(X,MaxLag);
+
+   R=SpaceTimeCovMat(X,MaxLag) estimates the polynomial covariance matrix
+   R[tau] from M-channel data x[n] such that
+       R[tau] = E{ x[n] x^H[n-tau] } 
+   Each of the M rows of X represents a time series, and each column 
+   represents the M-element vector x[n] at a specific sample index n. The 
+   time series are assumed to have zero mean such that R is a covariance
+   rather than a correlation matrix.
+
+   The evaluation of the covariance is restricted to lag values within the 
+   interval [-Maxlag;+MaxLag]. The output can also be interpreted as a 
+   polynomial or cross spectral density matrix
+      R(z) = R_{-MaxLag} z^MaxLag + ... + R_{-1} z + R0 +
+                  + R[1]z^{-1} + ... + R[MaxLag]z^{-MaxLag}
+   whereby the returned format is
+      R(:,:,1) = R_{-MagLag};
+      ...
+      R(:,:,MaxLag) = R_{-1};
+      R(:,:,MaxLag+1) = R_{0};
+      R(:,:,MaxLag+2) = R_{1};
+      ...
+      R(:,:,2*MaxLag+1) = R_{Maxlag}
+   The space-time covariance matrix is parahermitian, such that
+      R(:,:,1) = R(:,:,2*MaxLag+1)';
+      ...
+      R(:,:,MaxLag) = R(:,:,MaxLag+2)';
+   holds.
+
+   [R,tau]=SpaceTimeCovMat(X,MaxLag) additionally returns the lag para-
+   meters tau=(-MaxLag:MaxLag), such that e.g. MIMODisplay(tau,R) can 
+   display the various auto-and cross-correlation functions contained in R.
+
+   Input parameters:
+      X       M x L data matrix
+      MaxLag  maximum lag value calculated
+
+   Output parameter:
+      R       M x M x (2*MaxLag+1) polynomial covariance matrix
+      tau     2*MaxLag+1 index vector for lag values</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>	H = ParaHerm(G)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Demos/PMUSICDemo.html" class="code" title="">PMUSICDemo</a>	function SpectralMajorisationDemo();</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [R,tau] = SpaceTimeCovMat(X,MaxLag);</a>
+0002 <span class="comment">%[R,tau] = SpaceTimeCovMat(X,MaxLag);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   R=SpaceTimeCovMat(X,MaxLag) estimates the polynomial covariance matrix</span>
+0005 <span class="comment">%   R[tau] from M-channel data x[n] such that</span>
+0006 <span class="comment">%       R[tau] = E{ x[n] x^H[n-tau] }</span>
+0007 <span class="comment">%   Each of the M rows of X represents a time series, and each column</span>
+0008 <span class="comment">%   represents the M-element vector x[n] at a specific sample index n. The</span>
+0009 <span class="comment">%   time series are assumed to have zero mean such that R is a covariance</span>
+0010 <span class="comment">%   rather than a correlation matrix.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   The evaluation of the covariance is restricted to lag values within the</span>
+0013 <span class="comment">%   interval [-Maxlag;+MaxLag]. The output can also be interpreted as a</span>
+0014 <span class="comment">%   polynomial or cross spectral density matrix</span>
+0015 <span class="comment">%      R(z) = R_{-MaxLag} z^MaxLag + ... + R_{-1} z + R0 +</span>
+0016 <span class="comment">%                  + R[1]z^{-1} + ... + R[MaxLag]z^{-MaxLag}</span>
+0017 <span class="comment">%   whereby the returned format is</span>
+0018 <span class="comment">%      R(:,:,1) = R_{-MagLag};</span>
+0019 <span class="comment">%      ...</span>
+0020 <span class="comment">%      R(:,:,MaxLag) = R_{-1};</span>
+0021 <span class="comment">%      R(:,:,MaxLag+1) = R_{0};</span>
+0022 <span class="comment">%      R(:,:,MaxLag+2) = R_{1};</span>
+0023 <span class="comment">%      ...</span>
+0024 <span class="comment">%      R(:,:,2*MaxLag+1) = R_{Maxlag}</span>
+0025 <span class="comment">%   The space-time covariance matrix is parahermitian, such that</span>
+0026 <span class="comment">%      R(:,:,1) = R(:,:,2*MaxLag+1)';</span>
+0027 <span class="comment">%      ...</span>
+0028 <span class="comment">%      R(:,:,MaxLag) = R(:,:,MaxLag+2)';</span>
+0029 <span class="comment">%   holds.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   [R,tau]=SpaceTimeCovMat(X,MaxLag) additionally returns the lag para-</span>
+0032 <span class="comment">%   meters tau=(-MaxLag:MaxLag), such that e.g. MIMODisplay(tau,R) can</span>
+0033 <span class="comment">%   display the various auto-and cross-correlation functions contained in R.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%   Input parameters:</span>
+0036 <span class="comment">%      X       M x L data matrix</span>
+0037 <span class="comment">%      MaxLag  maximum lag value calculated</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%   Output parameter:</span>
+0040 <span class="comment">%      R       M x M x (2*MaxLag+1) polynomial covariance matrix</span>
+0041 <span class="comment">%      tau     2*MaxLag+1 index vector for lag values</span>
+0042 
+0043 <span class="comment">% S Weiss, Univ of Strathclyde, 20/6/2006</span>
+0044 
+0045 <span class="comment">% parameters and initialisation</span>
+0046 [M,L] = size(X);
+0047 <span class="keyword">if</span> MaxLag&gt;=L,
+0048    error(<span class="string">'maximum lag cannot exceed length of data'</span>);
+0049 <span class="keyword">end</span>;
+0050 R = zeros(M,M,2*MaxLag+1);
+0051 Lm = L - 2*MaxLag;
+0052 
+0053 <span class="comment">% correlation</span>
+0054 Xref = X(:,MaxLag+1:MaxLag+Lm);     <span class="comment">% fixed component</span>
+0055 <span class="keyword">for</span> tau = 1:2*MaxLag+1,
+0056   Xshift = X(:,tau:tau+Lm-1);       <span class="comment">% delayed component</span>
+0057   R(:,:,2*MaxLag+2-tau) = Xref*Xshift'/Lm; <span class="comment">% corr.</span>
+0058 <span class="keyword">end</span>;
+0059 tau = (-MaxLag:MaxLag);
+0060 
+0061 <span class="comment">% enforce parahermitian property</span>
+0062 R = (R + <a href="ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(R))/2;</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PolyMatDisplay</title>
+  <meta name="keywords" content="PolyMatDisplay">
+  <meta name="description" content="PolyMatDisplay(H,t,mode);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PolyMatDisplay
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>PolyMatDisplay(H,t,mode);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function PolyMatDisplay(H,t,mode); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">PolyMatDisplay(H,t,mode);
+  
+   Display the MIMO system or polynomial matrix represented by H. If H is
+   of dimension K x M x L, then Matlab will produce KxM subplots, each con-
+   taining an FIR response of length L.
+
+   In general, the system H(z) represented by H will be of the form
+      H(z) = H_{-L1} z^{L1} + ... + H_{-1} z + H0 + 
+                + H1 z^{-1} + ... + H_{L2} z^{-L2}
+   such that the total support length is L = L1+L2+1.
+
+   PolyMatDisplay(H) will plot the FIR filters along an x-axis range [0;L-1].
+   PolyMatDisplay(H,t) will plot the FIR filters against an axis t, whereby the
+   length of t must equal L.
+ 
+   The input H is assumed to be real valued. If complex valued, only the 
+   absolute values of the coefficients will be plotted.
+
+   The function produces a Matlab figure with KxM subplots each containing
+   a stem plot. The axes are returned unlabelled.
+
+   PolyMatDisplay(H,t,'hold') plots H over t in red * markers over an existing
+   plot.
+
+   Input parameters
+      H      KxMXL MIMO system matrix or polynomial matrix
+      t      L-dimensional axis vector (optional)
+             default:  t=(0:(L-1));
+      mode   'hold' to plot over an existing plot (optiona)
+              default if off
+
+   Output parameters: none</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Demos/PHPolyMatInvDemo.html" class="code" title="function PHPolyMatInvDemo(sw);">PHPolyMatInvDemo</a>	PHPolyMatInvDemo(SourceSwitch);</li><li><a href="../Demos/PolyMatAnalyticEVDTest.html" class="code" title="">PolyMatAnalyticEVDTest</a>	PolyMatAnalyticEVDTest.m</li><li><a href="../Demos/SBR2Demo.html" class="code" title="function SBR2Demo(SourceSwitch);">SBR2Demo</a>	SBR2Demo(SourceSwitch);</li><li><a href="../Demos/SMDDemo.html" class="code" title="function SMDDemo(SourceSwitch);">SMDDemo</a>	SMDDemo(SourceSwitch);</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function PolyMatDisplay(H,t,mode);</a>
+0002 <span class="comment">%PolyMatDisplay(H,t,mode);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   Display the MIMO system or polynomial matrix represented by H. If H is</span>
+0005 <span class="comment">%   of dimension K x M x L, then Matlab will produce KxM subplots, each con-</span>
+0006 <span class="comment">%   taining an FIR response of length L.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   In general, the system H(z) represented by H will be of the form</span>
+0009 <span class="comment">%      H(z) = H_{-L1} z^{L1} + ... + H_{-1} z + H0 +</span>
+0010 <span class="comment">%                + H1 z^{-1} + ... + H_{L2} z^{-L2}</span>
+0011 <span class="comment">%   such that the total support length is L = L1+L2+1.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   PolyMatDisplay(H) will plot the FIR filters along an x-axis range [0;L-1].</span>
+0014 <span class="comment">%   PolyMatDisplay(H,t) will plot the FIR filters against an axis t, whereby the</span>
+0015 <span class="comment">%   length of t must equal L.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%   The input H is assumed to be real valued. If complex valued, only the</span>
+0018 <span class="comment">%   absolute values of the coefficients will be plotted.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%   The function produces a Matlab figure with KxM subplots each containing</span>
+0021 <span class="comment">%   a stem plot. The axes are returned unlabelled.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%   PolyMatDisplay(H,t,'hold') plots H over t in red * markers over an existing</span>
+0024 <span class="comment">%   plot.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%   Input parameters</span>
+0027 <span class="comment">%      H      KxMXL MIMO system matrix or polynomial matrix</span>
+0028 <span class="comment">%      t      L-dimensional axis vector (optional)</span>
+0029 <span class="comment">%             default:  t=(0:(L-1));</span>
+0030 <span class="comment">%      mode   'hold' to plot over an existing plot (optiona)</span>
+0031 <span class="comment">%              default if off</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%   Output parameters: none</span>
+0034 
+0035 <span class="comment">%    S Weiss, Univ. of Strathclyde, 30/7/14</span>
+0036 <span class="comment">%        added 'hold' option 21/12/23</span>
+0037   
+0038 hold off;  
+0039 [K,L,M] = size(H);
+0040 
+0041 <span class="comment">%------------------------------------------------------------------------------</span>
+0042 <span class="comment">% check dimensions and options</span>
+0043 <span class="comment">%------------------------------------------------------------------------------</span>
+0044 <span class="keyword">if</span> nargin==1,
+0045   t = (0:M-1);
+0046 <span class="keyword">end</span>;  
+0047 <span class="keyword">if</span> nargin&lt;=2,
+0048    hold off;     
+0049    HoldMode = 0;
+0050 <span class="keyword">else</span>
+0051    <span class="keyword">if</span> mode==<span class="string">'hold'</span>,
+0052        HoldMode = 1;
+0053    <span class="keyword">else</span>
+0054        error(<span class="string">'plot option undefined'</span>);    
+0055    <span class="keyword">end</span>;    
+0056 <span class="keyword">end</span>;        
+0057 <span class="keyword">if</span> length(t)~=M,
+0058    error(<span class="string">'dimension mismatch for input parameters to function MIMODisplay()'</span>);
+0059 <span class="keyword">end</span>;
+0060 
+0061 <span class="comment">%------------------------------------------------------------------------------</span>
+0062 <span class="comment">% check if input matrix is real valued</span>
+0063 <span class="comment">%------------------------------------------------------------------------------</span>
+0064 <span class="keyword">if</span> isreal(H)~=1,
+0065    H = abs(H);    <span class="comment">% if not, plot absolute value of coefficients</span>
+0066 <span class="keyword">end</span>;
+0067 
+0068 Hmin = min(min(min(H)));
+0069 Hmax = max(max(max(H)));
+0070 <span class="keyword">if</span> Hmin&gt;0, 
+0071   Hmin=0; 
+0072 <span class="keyword">end</span>;
+0073 i = 0;
+0074 <span class="keyword">for</span> k = 1:K,              <span class="comment">% rows</span>
+0075   <span class="keyword">for</span> l = 1:L,            <span class="comment">% columns</span>
+0076     i = i + 1;
+0077     subplot(K,L,i);
+0078     <span class="keyword">if</span> HoldMode==0,
+0079        stem(t,shiftdim(H(k,l,:),1));
+0080        axis([t(1)-.1 t(end)+.1 Hmin*1.1 Hmax*1.1]);
+0081     <span class="keyword">else</span>
+0082        hold on; 
+0083        Aold = axis;
+0084        Anew =   [t(1)-.1 t(end)+.1 Hmin*1.1 Hmax*1.1];
+0085        A = [min(Aold(1),Anew(1)) max(Aold(2),Anew(2)) min(Aold(3),Anew(3)) max(Aold(4),Anew(4))];
+0086        plot(t,shiftdim(H(k,l,:),1),<span class="string">'r*'</span>);
+0087        axis(A);
+0088     <span class="keyword">end</span>;   
+0089   <span class="keyword">end</span>;
+0090 <span class="keyword">end</span>;</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

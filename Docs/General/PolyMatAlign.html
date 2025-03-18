@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PolyMatAlign</title>
+  <meta name="keywords" content="PolyMatAlign">
+  <meta name="description" content="[Shift,error] = PolyMatAlign(A,B);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PolyMatAlign
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>[Shift,error] = PolyMatAlign(A,B);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [Shift,error,A2,B2] = PolyMatAlign(A,B); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">[Shift,error] = PolyMatAlign(A,B);
+
+   PolyMatAlign(A,B) takes input arguments A and B to represent polynomial 
+   matrix A(z) and B(z) of the same dimension but potentially different order.
+   It determines the best delay such that A(z) - B(z)z^{-Shift} is minimised
+   in the least squares sense.
+   
+   [Shift,error] = PolyMatAlign(A,B) returns the determined shift and norm of
+   of the mismatch between the aligned matrices A(z) and B(z)z^{-Shift}.
+
+   [Shift,error,A2,B2] = PolyMatAlign(A,B) additionally returns the aligned 
+   matrices of identical orders in A2 and B2.
+
+   Input parameters:
+      A           MxNxL1 matrix
+      B           MxNxL2 matrix
+   
+   Output parameters:
+      Shift       determined delay between A and B
+      error       least squares mismatch between the aligned matrices
+      A2          MxBxL3 matrix A after alignment
+      B2          MxBxL3 matrix B after alignment</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>	N = PolyMatNorm(H,spec);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Shift,error,A2,B2] = PolyMatAlign(A,B);</a>
+0002 <span class="comment">%[Shift,error] = PolyMatAlign(A,B);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   PolyMatAlign(A,B) takes input arguments A and B to represent polynomial</span>
+0005 <span class="comment">%   matrix A(z) and B(z) of the same dimension but potentially different order.</span>
+0006 <span class="comment">%   It determines the best delay such that A(z) - B(z)z^{-Shift} is minimised</span>
+0007 <span class="comment">%   in the least squares sense.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   [Shift,error] = PolyMatAlign(A,B) returns the determined shift and norm of</span>
+0010 <span class="comment">%   of the mismatch between the aligned matrices A(z) and B(z)z^{-Shift}.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   [Shift,error,A2,B2] = PolyMatAlign(A,B) additionally returns the aligned</span>
+0013 <span class="comment">%   matrices of identical orders in A2 and B2.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   Input parameters:</span>
+0016 <span class="comment">%      A           MxNxL1 matrix</span>
+0017 <span class="comment">%      B           MxNxL2 matrix</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   Output parameters:</span>
+0020 <span class="comment">%      Shift       determined delay between A and B</span>
+0021 <span class="comment">%      error       least squares mismatch between the aligned matrices</span>
+0022 <span class="comment">%      A2          MxBxL3 matrix A after alignment</span>
+0023 <span class="comment">%      B2          MxBxL3 matrix B after alignment</span>
+0024 
+0025 <span class="comment">% S. Weiss, 19/2/2023</span>
+0026 
+0027 <span class="comment">%----- check arguments</span>
+0028 [M1,N1,L1] = size(A); [M,N,L2] = size(B);
+0029 <span class="keyword">if</span> (M~=M1)||(N~=N1), error(<span class="string">'dimension mismatch between input arguments'</span>); <span class="keyword">end</span>;
+0030 
+0031 <span class="comment">%------------------------------------------------------------------------------</span>
+0032 <span class="comment">%   determine shift</span>
+0033 <span class="comment">%------------------------------------------------------------------------------</span>
+0034 <span class="comment">%----- elementwise auto-correlation, add moduli</span>
+0035 r_ab = zeros(L1+L2-1,1);
+0036 <span class="keyword">for</span> m = 1:M, 
+0037    <span class="keyword">for</span> n = 1:N,
+0038        r_ab = r_ab + abs(conv(squeeze(A(m,n,:)),flipud(conj(squeeze(B(m,n,:))))));
+0039    <span class="keyword">end</span>;    
+0040 <span class="keyword">end</span>;
+0041 
+0042 <span class="comment">%----- determine delay</span>
+0043 TimeScale=(-L2+1:L1-1);
+0044 [~,TIndex] = max(r_ab);
+0045 Shift = -TimeScale(TIndex);
+0046 
+0047 <span class="comment">%------------------------------------------------------------------------------</span>
+0048 <span class="comment">%   determine mismatch</span>
+0049 <span class="comment">%------------------------------------------------------------------------------</span>
+0050 <span class="comment">% compensate for shift</span>
+0051 <span class="keyword">if</span> Shift&gt;0,    <span class="comment">% a positive shift means that A needs zero-padding at the front</span>
+0052    dummy = zeros(M,N,L1+Shift);
+0053    dummy(:,:,Shift+1:end) = A;
+0054    A = dummy;
+0055 <span class="keyword">else</span>           <span class="comment">% a negative shift means that B needs zeropadding at the front</span>
+0056    dummy = zeros(M,N,L2-Shift);
+0057    dummy(:,:,1-Shift:end) = B;
+0058    B = dummy;
+0059 <span class="keyword">end</span>;    
+0060 <span class="comment">% compensate for difference in orders</span>
+0061 L1 = size(A,3); L2 = size(B,3);
+0062 <span class="keyword">if</span> L1&gt;L2,
+0063    B2 = zeros(M,N,L1);
+0064    B2(:,:,1:L2) = B;
+0065    A2 = A;
+0066 <span class="keyword">else</span>
+0067    A2 = zeros(M,N,L2);
+0068    A2(:,:,1:L1) = A;
+0069    B2 = B;
+0070 <span class="keyword">end</span>;
+0071 <span class="comment">% mismatch as sum of squared Frobenius norms</span>
+0072 error = <a href="PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>(A2-B2);</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

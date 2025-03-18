@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of PolyVecDFTNormalisation</title>
+  <meta name="keywords" content="PolyVecDFTNormalisation">
+  <meta name="description" content="qf = PolyVecDFTNormalisation(af,Smoothing);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>PolyVecDFTNormalisation
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>qf = PolyVecDFTNormalisation(af,Smoothing);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function qf = PolyVecDFTNormalisation(af,Smoothing); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> qf = PolyVecDFTNormalisation(af,Smoothing);
+
+ If af is an MxNfft matrix that in its rows represents the DFT of an M-element
+ polynomial vector, the return argument qf is the DFT of a vector of analytic 
+ functions, approximated to order (Nfft-1), that is a version of af normalised 
+ on the unit circle.
+ qf = PolyVecDFTNormalisation(af,Smoothing) with Smoothing='on' performs
+ additional phase smoothing to the normalised vector. 
+
+ The algorithm is based on a draft on Gram-Schmidt orthonormalisation [1], and 
+ utilises a bin-shift method detailed in [2]. A smoothing method is utilised
+ from [3]; this is a computationally slow and costly procedure, particularly 
+ for large DFT sizes!
+
+ Input parameter:
+    af         MxNfft  DFT sample points of an M-element polynomial vector
+    Smoothing  'on' for additional phase smoothing (optional)
+
+ Output parameter:
+    qf         MxNfft  DFT sample points of M-element normalised vector
+
+ References:
+ [1]  F.A. Khattak, I.K. Proudler, S.J. Schlecht, and S. Weiss: &quot;Modified Gram-
+      Schmidt Orthonormalisation for Matrices of Analytic Functions,&quot; to be
+       submitted.
+ [2]  F.A. Khattak, I.K. Proudler, and S. Weiss: &quot;Scalable Analytic Eigenvalue 
+      Extraction Algorithm,&quot; submitted to IEEE Access, 2024.
+ [3]  S. Weiss, I.K. Proudler, F.K. Coutts, and F.A. Khattak: &quot;Eigenvalue 
+      decomposition of a parahermitian matrix: extraction of analytic 
+      eigenvectors,&quot; IEEE Transactions on Signal Processing, vol. 71, pp. 
+      1642-1656, April 2023.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="PhaseSmoothing.html" class="code" title="function [q,chi] = PhaseSmoothing(q_in,P,q_opt);">PhaseSmoothing</a>	[q,chi] = PhaseSmoothing(q_in,P);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function qf = PolyVecDFTNormalisation(af,Smoothing);</a>
+0002 <span class="comment">% qf = PolyVecDFTNormalisation(af,Smoothing);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% If af is an MxNfft matrix that in its rows represents the DFT of an M-element</span>
+0005 <span class="comment">% polynomial vector, the return argument qf is the DFT of a vector of analytic</span>
+0006 <span class="comment">% functions, approximated to order (Nfft-1), that is a version of af normalised</span>
+0007 <span class="comment">% on the unit circle.</span>
+0008 <span class="comment">% qf = PolyVecDFTNormalisation(af,Smoothing) with Smoothing='on' performs</span>
+0009 <span class="comment">% additional phase smoothing to the normalised vector.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% The algorithm is based on a draft on Gram-Schmidt orthonormalisation [1], and</span>
+0012 <span class="comment">% utilises a bin-shift method detailed in [2]. A smoothing method is utilised</span>
+0013 <span class="comment">% from [3]; this is a computationally slow and costly procedure, particularly</span>
+0014 <span class="comment">% for large DFT sizes!</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Input parameter:</span>
+0017 <span class="comment">%    af         MxNfft  DFT sample points of an M-element polynomial vector</span>
+0018 <span class="comment">%    Smoothing  'on' for additional phase smoothing (optional)</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Output parameter:</span>
+0021 <span class="comment">%    qf         MxNfft  DFT sample points of M-element normalised vector</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% References:</span>
+0024 <span class="comment">% [1]  F.A. Khattak, I.K. Proudler, S.J. Schlecht, and S. Weiss: &quot;Modified Gram-</span>
+0025 <span class="comment">%      Schmidt Orthonormalisation for Matrices of Analytic Functions,&quot; to be</span>
+0026 <span class="comment">%       submitted.</span>
+0027 <span class="comment">% [2]  F.A. Khattak, I.K. Proudler, and S. Weiss: &quot;Scalable Analytic Eigenvalue</span>
+0028 <span class="comment">%      Extraction Algorithm,&quot; submitted to IEEE Access, 2024.</span>
+0029 <span class="comment">% [3]  S. Weiss, I.K. Proudler, F.K. Coutts, and F.A. Khattak: &quot;Eigenvalue</span>
+0030 <span class="comment">%      decomposition of a parahermitian matrix: extraction of analytic</span>
+0031 <span class="comment">%      eigenvectors,&quot; IEEE Transactions on Signal Processing, vol. 71, pp.</span>
+0032 <span class="comment">%      1642-1656, April 2023.</span>
+0033 
+0034 <span class="comment">% Stephan Weiss, UoS, 12/8/24</span>
+0035 
+0036 <span class="comment">%------------------------------------------------------------------------------</span>
+0037 <span class="comment">% parameters</span>
+0038 <span class="comment">%------------------------------------------------------------------------------</span>
+0039 [M,K] = size(af);              <span class="comment">% spatial dimension and DFT length</span>
+0040 eps0 = 1e-7;                   <span class="comment">% threshold for &quot;zero norm&quot;</span>
+0041                                <span class="comment">% still to be done: should be relative to the largest bin norm</span>
+0042 ShiftStep = 0.05;              <span class="comment">% shift of any zero bins relative to bin size</span>
+0043 QuietMode=0;                   <span class="comment">% '0' for intermediate results, '1' for none</span>
+0044 
+0045 <span class="comment">%------------------------------------------------------------------------------</span>
+0046 <span class="comment">% take K-point DFT and move bins where the vector norm is zero</span>
+0047 <span class="comment">%------------------------------------------------------------------------------</span>
+0048 NormAf2 = sum(abs(af).^2);     <span class="comment">% squared norm in each bin</span>
+0049 ZeroBinIndices = find(NormAf2&lt;eps0);
+0050 <span class="keyword">if</span> QuietMode==0, disp(sprintf(<span class="string">'number of bins with zero norm: %d'</span>,length(ZeroBinIndices))); <span class="keyword">end</span>;
+0051 <span class="comment">% shift frequencies in bins with zeros until norm is finite</span>
+0052 ShiftedFreqs = (ZeroBinIndices-1)/K;         <span class="comment">% normalised freq. [0...1]</span>
+0053 <span class="keyword">if</span> length(ZeroBinIndices)&gt;0,
+0054   a = ifft(af,K,2);            <span class="comment">%   time domain samples needed for interpolation</span>
+0055   ShiftedFreqs = ShiftedFreqs + ShiftStep/K;
+0056   <span class="keyword">for</span> i = 1:length(ZeroBinIndices),
+0057      Crit = 0; NShifts = 1;
+0058      <span class="keyword">while</span> Crit==0,
+0059         af(:,ZeroBinIndices(i)) = a*exp(-1i*2*pi*ShiftedFreqs(i)*(0:K-1)');
+0060         NormAf2(ZeroBinIndices(i)) = sum(abs(af(:,ZeroBinIndices(i))).^2);
+0061         <span class="keyword">if</span> NormAf2(ZeroBinIndices(i))&gt;eps0,      <span class="comment">% norm no longer zero</span>
+0062            Crit=1;
+0063         <span class="keyword">else</span>                                     <span class="comment">% keep shifting further</span>
+0064            ShiftedFreqs(i) = ShiftedFreqs(i)+ShiftStep/K;
+0065            NShifts = NShifts+1;
+0066         <span class="keyword">end</span>;
+0067      <span class="keyword">end</span>;
+0068      <span class="keyword">if</span> QuietMode==0, disp(sprintf(<span class="string">'bin %d shifted %d times'</span>,[ZeroBinIndices(i), NShifts])); <span class="keyword">end</span>;
+0069      <span class="comment">% still need to check that this does not infringe on the next bin</span>
+0070      <span class="keyword">if</span> NShifts*ShiftStep&gt;=1, error(<span class="string">'conflicting bin shift --- either vector norm is too small, or the threshold to detect zeros is too stringent'</span>); <span class="keyword">end</span>;
+0071   <span class="keyword">end</span>;
+0072 <span class="keyword">end</span>;
+0073 
+0074 <span class="comment">%------------------------------------------------------------------------------</span>
+0075 <span class="comment">% bin-wise normalisation</span>
+0076 <span class="comment">%------------------------------------------------------------------------------</span>
+0077 NormFactor = 1./sqrt(NormAf2);
+0078 Afnorm = af.*NormFactor(ones(1,M),:);
+0079 
+0080 <span class="comment">%------------------------------------------------------------------------------</span>
+0081 <span class="comment">% determine zero crossings</span>
+0082 <span class="comment">%------------------------------------------------------------------------------</span>
+0083 HermAngle = zeros(1,K);
+0084 HermAngle(1) = angle(Afnorm(:,end)'*Afnorm(:,1));
+0085 <span class="keyword">for</span> k = 2:K,
+0086    HermAngle(k) = angle(Afnorm(:,k-1)'*Afnorm(:,k));
+0087 <span class="keyword">end</span>;   
+0088 SignCorrection = -mod(cumsum(HermAngle&gt;pi/2),2);      <span class="comment">% '-1' means a sign change</span>
+0089 dummy = find(SignCorrection==0);
+0090 SignCorrection(dummy) = ones(1,length(dummy));        <span class="comment">% '1' means no sign change</span>
+0091 
+0092 <span class="comment">%------------------------------------------------------------------------------</span>
+0093 <span class="comment">% fractional delay if number of zero crossings is odd</span>
+0094 <span class="comment">%------------------------------------------------------------------------------</span>
+0095 <span class="keyword">if</span> SignCorrection(K)==(-1),
+0096    <span class="keyword">if</span> QuietMode==0, disp(<span class="string">'a sign correction is needed'</span>); <span class="keyword">end</span>;
+0097    Correction = SignCorrection.*exp(-1i*pi*(0:K-1)/K);
+0098    <span class="comment">% fix at shifted frequencies</span>
+0099    Correction(ZeroBinIndices) = SignCorrection(ZeroBinIndices).*exp(-1i*pi*ShiftedFreqs);
+0100 <span class="keyword">else</span>
+0101    Correction = SignCorrection;      
+0102 <span class="keyword">end</span>;
+0103 <span class="comment">% apply correction</span>
+0104 Afnorm = Afnorm.*Correction(ones(1,M),:);   
+0105 
+0106 <span class="comment">%------------------------------------------------------------------------------</span>
+0107 <span class="comment">% interpolate bins with (formerly) zero norm</span>
+0108 <span class="comment">%------------------------------------------------------------------------------</span>
+0109 <span class="keyword">if</span> length(ZeroBinIndices)&gt;0,                          <span class="comment">% skip if there are no zeros</span>
+0110    <span class="comment">% matrices for interpolation (see Faizan's IEEE Access submission)</span>
+0111    NonZeroBinIndices = setdiff((1:K),ZeroBinIndices);
+0112    W = dftmtx(K)/sqrt(K);
+0113    Wu = W(NonZeroBinIndices,:);
+0114    Wuperp = W(ZeroBinIndices,:);
+0115    Wn = exp(-1i*2*pi*ShiftedFreqs'*(0:K-1))/sqrt(K);
+0116    A = Wn*Wu'; 
+0117    Binv = inv(Wn*Wuperp');
+0118    <span class="comment">% perform interpolation to replace shifted bins</span>
+0119    <span class="keyword">for</span> m = 1:M,
+0120       Afnorm(m,ZeroBinIndices) = ( [-Binv*A Binv]*Afnorm(m,[NonZeroBinIndices ZeroBinIndices]).' ).';
+0121    <span class="keyword">end</span>;
+0122 <span class="keyword">end</span>;            
+0123         
+0124 <span class="comment">%------------------------------------------------------------------------------</span>
+0125 <span class="comment">% potential smoothing</span>
+0126 <span class="comment">%------------------------------------------------------------------------------</span>
+0127 P = 3;                          <span class="comment">% derivative order applied for smoothing</span>
+0128 <span class="keyword">if</span> nargin&gt;1,
+0129    <span class="keyword">if</span> strcmp(Smoothing,<span class="string">'on'</span>)==1,  
+0130        disp(<span class="string">'perform additional phase smoothing'</span>);
+0131       qf = <a href="PhaseSmoothing.html" class="code" title="function [q,chi] = PhaseSmoothing(q_in,P,q_opt);">PhaseSmoothing</a>(Afnorm,P);
+0132    <span class="keyword">else</span>
+0133       qf = Afnorm;
+0134    <span class="keyword">end</span>;
+0135 <span class="keyword">else</span>
+0136    qf = Afnorm;
+0137 <span class="keyword">end</span>;</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

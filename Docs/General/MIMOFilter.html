@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of MIMOFilter</title>
+  <meta name="keywords" content="MIMOFilter">
+  <meta name="description" content="Y = MIMOfilter(H,X);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html General -->
+<h1>MIMOFilter
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>Y = MIMOfilter(H,X);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function Y = MIMOFilter(H,X); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">Y = MIMOfilter(H,X);
+
+  Performs a filtering of an N-channel input with 
+  a KxN channel MIMO system.
+  
+  Input parameters:
+       H     K x N x L MIMO system matrix
+                 K   output dimension
+                 N   input dimension
+                 L1   lenght of FIR filters
+       X     N x L2   N channel input of length L2
+
+  Output parameter:
+       Y     K x L2   K channel output of length L2</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Demos/PMUSICDemo.html" class="code" title="">PMUSICDemo</a>	function SpectralMajorisationDemo();</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Y = MIMOFilter(H,X);</a>
+0002 <span class="comment">%Y = MIMOfilter(H,X);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  Performs a filtering of an N-channel input with</span>
+0005 <span class="comment">%  a KxN channel MIMO system.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%  Input parameters:</span>
+0008 <span class="comment">%       H     K x N x L MIMO system matrix</span>
+0009 <span class="comment">%                 K   output dimension</span>
+0010 <span class="comment">%                 N   input dimension</span>
+0011 <span class="comment">%                 L1   lenght of FIR filters</span>
+0012 <span class="comment">%       X     N x L2   N channel input of length L2</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%  Output parameter:</span>
+0015 <span class="comment">%       Y     K x L2   K channel output of length L2</span>
+0016   
+0017 <span class="comment">%  S Weiss, Univ of Southampton, 15/7/2004</span>
+0018   
+0019 [M,N1,L1] = size(H);
+0020 [N2,L2] = size(X);
+0021 <span class="keyword">if</span> N2 ~= N1,
+0022   error(<span class="string">'MIMOfilter: dimensions do not agree'</span>);
+0023 <span class="keyword">end</span>;
+0024 Y = zeros(M,L2);
+0025 <span class="keyword">for</span> m = 1:M,
+0026   <span class="keyword">for</span> n = 1:N1,
+0027     Y(m,:) = Y(m,:) + filter(shiftdim(H(m,n,:)),1,X(n,:));  
+0028   <span class="keyword">end</span>;  
+0029 <span class="keyword">end</span>;
+0030</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

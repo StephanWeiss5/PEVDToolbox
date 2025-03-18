@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ConvergenceDemo</title>
+  <meta name="keywords" content="ConvergenceDemo">
+  <meta name="description" content="ConvergenceDemo(SourceSwitch);">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html &copy; 2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+  <script type="text/javascript">
+    if (top.frames.length == 0) { top.location = "../index.html"; };
+  </script>
+</head>
+<body>
+<a name="_top"></a>
+<!-- menu.html Demos -->
+<h1>ConvergenceDemo
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>ConvergenceDemo(SourceSwitch);</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function ConvergenceDemo(SourceSwitch); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment">ConvergenceDemo(SourceSwitch);
+
+  ConvergenceDemo(SourceSwitch) compares the polynomial EVD approximations by 
+  the functions SBR2() and SMD() for different types of parahermitian matrices. 
+  The demo provides the reduction in off-diagonal energy in increments of 5 
+  iteration steps.
+ 
+  Theinput parameter SourceSwitch can be selected as:
+   
+  ComparisonDemo('Random') uses an arbitrary complex valued 5x5 polynomial 
+  parahermitian matrix of order 10.
+
+  ComparisonDemo('Simple1') compares decompositions of a 3x3 real valued 
+  polynomial parahermitian matrix R(z) of order 4:
+                | 1     -.4*z       0     |
+       R(z) =   | -.4*z   1     .5*z^{-2} |
+                | 0     .5*z^2      3     |     
+
+  ComparisonDemo('Simple2') compares the decompositions of a 5x5 complex valued 
+  polynomial parahermitian matrix R(z) of order 4:
+                |    1        .5*z^2  -.4j*z^{-1}    0   .2j*z^2 |
+                | .5*z^{-2}      1         0         0       0   |
+       R(z) =   |   .4j*z        0         3      .3z^{-1}   0   |
+                |    0           0       .3*z       .5       0   |
+                |-.2j*z^{-2}     0         0         0      .25  |
+  This matrix admits a PEVD with a non-polynomial Gamma(z).
+
+  The function generates a plot showing the remaining off-diagonal power, 
+  normalised w.r.t. the total power of the matrix; this indicates how well the
+  two algorithms perform their diagonalisation task. A second figure compares 
+  the off-diagonal power in relation to the order of the paraunitary matrices 
+  required in order to accomplish this decomposition. 
+
+  Input parameter:
+       SourceSwitch       selects parahermitian matrx to be decomposed
+                          default: 'Random'
+  Output parameter: none</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="../Decompositions/SBR2.html" class="code" title="function [H,Gamma] = SBR2(R,maxiter,epsilon,Mu,vers);">SBR2</a>	[H,Gamma] = SBR2(R,maxiter,epsilon,mu,vers);</li><li><a href="../Decompositions/SMD.html" class="code" title="function [H,Gamma] = SMD(R,maxiter,epsilon,Mu,SFlag);">SMD</a>	[H,Gamma] = SMD(R,maxiter,epsilon,Mu,vers);</li><li><a href="../General/ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>	H = ParaHerm(G)</li><li><a href="../General/PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>	H = PolyMatConv(F,G);</li><li><a href="../General/PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>	N = PolyMatNorm(H,spec);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function ConvergenceDemo(SourceSwitch);</a>
+0002 <span class="comment">%ConvergenceDemo(SourceSwitch);</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%  ConvergenceDemo(SourceSwitch) compares the polynomial EVD approximations by</span>
+0005 <span class="comment">%  the functions SBR2() and SMD() for different types of parahermitian matrices.</span>
+0006 <span class="comment">%  The demo provides the reduction in off-diagonal energy in increments of 5</span>
+0007 <span class="comment">%  iteration steps.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%  Theinput parameter SourceSwitch can be selected as:</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%  ComparisonDemo('Random') uses an arbitrary complex valued 5x5 polynomial</span>
+0012 <span class="comment">%  parahermitian matrix of order 10.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%  ComparisonDemo('Simple1') compares decompositions of a 3x3 real valued</span>
+0015 <span class="comment">%  polynomial parahermitian matrix R(z) of order 4:</span>
+0016 <span class="comment">%                | 1     -.4*z       0     |</span>
+0017 <span class="comment">%       R(z) =   | -.4*z   1     .5*z^{-2} |</span>
+0018 <span class="comment">%                | 0     .5*z^2      3     |</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%  ComparisonDemo('Simple2') compares the decompositions of a 5x5 complex valued</span>
+0021 <span class="comment">%  polynomial parahermitian matrix R(z) of order 4:</span>
+0022 <span class="comment">%                |    1        .5*z^2  -.4j*z^{-1}    0   .2j*z^2 |</span>
+0023 <span class="comment">%                | .5*z^{-2}      1         0         0       0   |</span>
+0024 <span class="comment">%       R(z) =   |   .4j*z        0         3      .3z^{-1}   0   |</span>
+0025 <span class="comment">%                |    0           0       .3*z       .5       0   |</span>
+0026 <span class="comment">%                |-.2j*z^{-2}     0         0         0      .25  |</span>
+0027 <span class="comment">%  This matrix admits a PEVD with a non-polynomial Gamma(z).</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">%  The function generates a plot showing the remaining off-diagonal power,</span>
+0030 <span class="comment">%  normalised w.r.t. the total power of the matrix; this indicates how well the</span>
+0031 <span class="comment">%  two algorithms perform their diagonalisation task. A second figure compares</span>
+0032 <span class="comment">%  the off-diagonal power in relation to the order of the paraunitary matrices</span>
+0033 <span class="comment">%  required in order to accomplish this decomposition.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%  Input parameter:</span>
+0036 <span class="comment">%       SourceSwitch       selects parahermitian matrx to be decomposed</span>
+0037 <span class="comment">%                          default: 'Random'</span>
+0038 <span class="comment">%  Output parameter: none</span>
+0039 
+0040 <span class="comment">% S. Weiss, University of Southampton, 8/10/2014</span>
+0041 
+0042 <span class="keyword">if</span> nargin==0,
+0043    SourceSwitch=<span class="string">'Random'</span>;
+0044 <span class="keyword">end</span>;
+0045 
+0046 disp(<span class="string">'SBR2 and SMD Convergence Comparison Demo'</span>);
+0047 disp(<span class="string">'--------------------------------------------'</span>);
+0048 
+0049 <span class="comment">%---------------------------------------</span>
+0050 <span class="comment">%  Define Scenario</span>
+0051 <span class="comment">%---------------------------------------</span>
+0052 <span class="comment">% create parahermitian matrix to be decomposed</span>
+0053 <span class="keyword">if</span> strcmp(SourceSwitch,<span class="string">'Random'</span>)==1,
+0054    A = randn(5,5,6) + sqrt(-1)*randn(5,5,6);;
+0055    R = <a href="../General/PolyMatConv.html" class="code" title="function H = PolyMatConv(F,G);">PolyMatConv</a>(A,<a href="../General/ParaHerm.html" class="code" title="function H = ParaHerm(G);">ParaHerm</a>(A));
+0056 <span class="keyword">elseif</span> strcmp(SourceSwitch,<span class="string">'Simple1'</span>)==1,
+0057    R        = zeros(3,3,5);
+0058    R(:,:,3) = diag([1 1 3]);
+0059    R(1,2,1) = .5;
+0060    R(2,1,5) = .5;
+0061    R(1,2,2) = -.4;
+0062    R(2,1,4) = -.4;
+0063 <span class="keyword">elseif</span> strcmp(SourceSwitch,<span class="string">'Simple2'</span>)==1,
+0064    R        = zeros(5,5,5);
+0065    R(:,:,3) = diag([1 1 3 .5 .25]);
+0066    R(1,2,1) = .5;
+0067    R(2,1,5) = .5;
+0068    R(1,3,4) = -.4*sqrt(-1);
+0069    R(3,1,2) = .4*sqrt(-1);
+0070    R(1,5,1) = .2*sqrt(-1);
+0071    R(5,1,5) = -.2*sqrt(-1);
+0072    R(4,3,2) = .3;
+0073    R(3,4,4) = .3;
+0074 <span class="keyword">else</span>                    
+0075    error(<span class="string">'option for input parameter SourceSwitch not implemented'</span>);
+0076 <span class="keyword">end</span>;  
+0077 
+0078 <span class="comment">%---------------------------------------</span>
+0079 <span class="comment">%  Set incremental parameters</span>
+0080 <span class="comment">%---------------------------------------</span>
+0081 <span class="comment">% parameters</span>
+0082 maxiter = 5;                  <span class="comment">% max number of iterations per update</span>
+0083 blocks  = 20;
+0084 epsilon = 10^(-10);           <span class="comment">% alternative stopping criterion</span>
+0085                               <span class="comment">%    ensure that this is not invoked</span>
+0086 mu = 0;                       <span class="comment">% truncate true zeroes</span>
+0087 GammaSMD = R;                 <span class="comment">% initialisations</span>
+0088 GammaSBR2 = R;
+0089 N1 = <a href="../General/PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>(R);
+0090 N2 = <a href="../General/PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>(R,<span class="string">'OffDiag'</span>);
+0091 OffDiagNormSMD(1) = N2/N1;    <span class="comment">% normalised remaining off-diag. energy</span>
+0092 OffDiagNormSBR2(1) = N2/N1;        
+0093 OrderSMD(1)=0;
+0094 OrderSBR2(1)=0;
+0095 
+0096 <span class="comment">%---------------------------------------</span>
+0097 <span class="comment">%  Recursively decompose in blocks of 5 iterations</span>
+0098 <span class="comment">%---------------------------------------</span>
+0099 <span class="keyword">for</span> n = 2:blocks,
+0100    <span class="comment">% SMD iteration</span>
+0101    [H,GammaSMD] = <a href="../Decompositions/SMD.html" class="code" title="function [H,Gamma] = SMD(R,maxiter,epsilon,Mu,SFlag);">SMD</a>(GammaSMD,maxiter,epsilon,mu,<span class="string">'SMD'</span>);
+0102    OffDiagNormSMD(n) = <a href="../General/PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>(GammaSMD,<span class="string">'OffDiag'</span>)/N1;
+0103    OrderSMD(n) = OrderSMD(n-1)+size(H,3)-1;
+0104    <span class="comment">% SBR2 iteration</span>
+0105    [H,GammaSBR2] = <a href="../Decompositions/SBR2.html" class="code" title="function [H,Gamma] = SBR2(R,maxiter,epsilon,Mu,vers);">SBR2</a>(GammaSBR2,maxiter,epsilon,mu,<span class="string">'SBR2'</span>);
+0106    OffDiagNormSBR2(n) = <a href="../General/PolyMatNorm.html" class="code" title="function Fnorm = PolyMatNorm(H,SpecString);">PolyMatNorm</a>(GammaSBR2,<span class="string">'OffDiag'</span>)/N1;
+0107    OrderSBR2(n) = OrderSBR2(n-1)+size(H,3)-1;
+0108 <span class="keyword">end</span>;
+0109 
+0110 <span class="comment">%---------------------------------------</span>
+0111 <span class="comment">%  Display resulting matrices</span>
+0112 <span class="comment">%---------------------------------------</span>
+0113 <span class="comment">% display normalised remaining off-diagonal power vs iterations</span>
+0114 figure(1); clf; 
+0115 plot(1:maxiter:maxiter*blocks,5*log10(OffDiagNormSBR2),<span class="string">'bo'</span>);
+0116 hold on;
+0117 plot(1:maxiter:maxiter*blocks,5*log10(OffDiagNormSMD),<span class="string">'r*'</span>);
+0118 legend(<span class="string">'SBR2'</span>,<span class="string">'SMD'</span>);
+0119 xlabel(<span class="string">'iterations'</span>);
+0120 ylabel(<span class="string">'norm. remaining off-diagonal power / [dB]'</span>);
+0121 disp(<span class="string">'Figure 1: norm. remaining off-diagonal power vs iterations'</span>);
+0122 
+0123 <span class="comment">% display normalised remaining off-diagonal power vs paraunitary order</span>
+0124 figure(2); clf;
+0125 plot(OrderSBR2,5*log10(OffDiagNormSBR2),<span class="string">'bo'</span>);
+0126 hold on;
+0127 plot(OrderSMD,5*log10(OffDiagNormSMD),<span class="string">'r*'</span>);
+0128 legend(<span class="string">'SBR2'</span>,<span class="string">'SMD'</span>);
+0129 xlabel(<span class="string">'paraunitary order (without truncation)'</span>);
+0130 ylabel(<span class="string">'norm. remaining off-diagonal power / [dB]'</span>);
+0131 disp(<span class="string">'Figure 2: norm. remaining off-diagonal power vs paraunitary order'</span>);</pre></div>
+<hr><address>Generated on Wed 05-Mar-2025 13:54:45 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" target="_parent">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
